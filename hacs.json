@@ -1,0 +1,4 @@
+{
+  "name": "Climacell weather provider",
+  "domains": ["sensor"]
+}
