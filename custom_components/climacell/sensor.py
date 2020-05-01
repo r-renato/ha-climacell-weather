@@ -82,6 +82,21 @@ ATTR_WEATHER_PRECIPITATION_PROBABILITY = "precipitation_probability"
 ATTR_WEATHER_CLOUD_COVER = "cloud_cover"
 ATTR_WEATHER_CONDITION = "weather_condition"
 
+ATTR_POLLEN_TREE = "pollen_tree"
+ATTR_POLLEN_WEED = "pollen_weed"
+ATTR_POLLEN_GRASS = "pollen_grass"
+
+ATTR_AIR_QUALITY_PM25 = "pm25"
+ATTR_AIR_QUALITY_PM10 = "pm10"
+ATTR_AIR_QUALITY_O3 = "o3"
+ATTR_AIR_QUALITY_NO2 = "no2"
+ATTR_AIR_QUALITY_CO = "co"
+ATTR_AIR_QUALITY_SO2 = "so2"
+ATTR_AIR_QUALITY_EPA_AQI = "epa_aqi"
+ATTR_AIR_QUALITY_EPA_PRIM = "epa_primary_pollutant"
+ATTR_AIR_QUALITY_EPA_HEALTH = "epa_health_concern"
+ATTR_FIRE_INDEX = "fire_index"
+
 REALTIME_SENSOR = {
     ATTR_WEATHER_CONDITION,
     ATTR_WEATHER_TEMPERATURE,
@@ -94,6 +109,23 @@ REALTIME_SENSOR = {
     ATTR_WEATHER_WIND_SPEED,
     ATTR_WEATHER_WIND_DIRECTION,
     ATTR_WEATHER_WIND_GUST,
+
+    ATTR_AIR_QUALITY_PM25,
+    ATTR_AIR_QUALITY_PM10,
+    ATTR_AIR_QUALITY_O3,
+    ATTR_AIR_QUALITY_NO2,
+    ATTR_AIR_QUALITY_CO,
+    ATTR_AIR_QUALITY_SO2,
+    ATTR_AIR_QUALITY_EPA_AQI,
+    ATTR_AIR_QUALITY_EPA_PRIM,
+    ATTR_AIR_QUALITY_EPA_HEALTH,
+
+    ATTR_POLLEN_TREE,
+    ATTR_POLLEN_WEED,
+    ATTR_POLLEN_GRASS,
+
+    ATTR_FIRE_INDEX,
+
     ATTR_MOON_PHASE,
     SUN_EVENT_SUNSET,
     SUN_EVENT_SUNRISE,
@@ -119,7 +151,7 @@ SENSOR_TYPES = {
         ATTR_OUT_FIELD: "weather_code",
         ATTR_NAME: "Weather Condition",
         ATTR_ICON: "mdi:thermometer",
-        ATTR_FORECAST_VALUES: 1
+        ATTR_FORECAST_VALUES: 0
     },
     ATTR_WEATHER_TEMPERATURE: {
         ATTR_FIELD: "temp",
@@ -154,7 +186,7 @@ SENSOR_TYPES = {
         ATTR_OUT_FIELD: "precipitation",
         ATTR_NAME: "Precipitation",
         ATTR_ICON: "mdi:weather-rainy",
-        ATTR_FORECAST_VALUES: 2
+        ATTR_FORECAST_VALUES: 1
     },
     ATTR_WEATHER_PRECIPITATION_TYPE: {
         ATTR_FIELD: "precipitation_type",
@@ -198,6 +230,101 @@ SENSOR_TYPES = {
         ATTR_ICON: "mdi:weather-windy-variant",
         ATTR_FORECAST_VALUES: 2
     },
+
+    ATTR_AIR_QUALITY_PM25: {
+        ATTR_FIELD: "pm25",
+        ATTR_OUT_FIELD: "pm25",
+        ATTR_NAME: "pm25",
+        ATTR_ICON: "mdi:eye",
+        ATTR_FORECAST_VALUES: 0
+    },
+    ATTR_AIR_QUALITY_PM10: {
+        ATTR_FIELD: "pm10",
+        ATTR_OUT_FIELD: "pm10",
+        ATTR_NAME: "pm10",
+        ATTR_ICON: "mdi:eye",
+        ATTR_FORECAST_VALUES: 0
+    },
+    ATTR_AIR_QUALITY_O3: {
+        ATTR_FIELD: "o3",
+        ATTR_OUT_FIELD: "o3",
+        ATTR_NAME: "o3",
+        ATTR_ICON: "mdi:eye",
+        ATTR_FORECAST_VALUES: 0
+    },
+    ATTR_AIR_QUALITY_NO2: {
+        ATTR_FIELD: "no2",
+        ATTR_OUT_FIELD: "no2",
+        ATTR_NAME: "no2",
+        ATTR_ICON: "mdi:eye",
+        ATTR_FORECAST_VALUES: 0
+    },
+    ATTR_AIR_QUALITY_CO: {
+        ATTR_FIELD: "co",
+        ATTR_OUT_FIELD: "co",
+        ATTR_NAME: "co",
+        ATTR_ICON: "mdi:eye",
+        ATTR_FORECAST_VALUES: 0
+    },
+    ATTR_AIR_QUALITY_SO2: {
+        ATTR_FIELD: "so2",
+        ATTR_OUT_FIELD: "so2",
+        ATTR_NAME: "so2",
+        ATTR_ICON: "mdi:eye",
+        ATTR_FORECAST_VALUES: 0
+    },
+    ATTR_AIR_QUALITY_EPA_AQI: {
+        ATTR_FIELD: "epa_aqi",
+        ATTR_OUT_FIELD: "epa_aqi",
+        ATTR_NAME: "EPA AQI",
+        ATTR_ICON: "mdi:eye",
+        ATTR_FORECAST_VALUES: 0
+    },
+    ATTR_AIR_QUALITY_EPA_PRIM: {
+        ATTR_FIELD: "epa_primary_pollutant",
+        ATTR_OUT_FIELD: "epa_primary_pollutant",
+        ATTR_NAME: "EPA Primary Pollutant",
+        ATTR_ICON: "mdi:eye",
+        ATTR_FORECAST_VALUES: 0
+    },
+    ATTR_AIR_QUALITY_EPA_HEALTH: {
+        ATTR_FIELD: "epa_health_concern",
+        ATTR_OUT_FIELD: "epa_health_concern",
+        ATTR_NAME: "EPA Health Concern",
+        ATTR_ICON: "mdi:eye",
+        ATTR_FORECAST_VALUES: 0
+    },
+
+    ATTR_POLLEN_TREE: {
+        ATTR_FIELD: "pollen_tree",
+        ATTR_OUT_FIELD: "pollen_tree",
+        ATTR_NAME: "Pollen Tree",
+        ATTR_ICON: "mdi:tree",
+        ATTR_FORECAST_VALUES: 0
+    },
+    ATTR_POLLEN_WEED: {
+        ATTR_FIELD: "pollen_weed",
+        ATTR_OUT_FIELD: "pollen_weed",
+        ATTR_NAME: "Pollen Weed",
+        ATTR_ICON: "mdi:sprout",
+        ATTR_FORECAST_VALUES: 0
+    },
+    ATTR_POLLEN_GRASS: {
+        ATTR_FIELD: "pollen_grass",
+        ATTR_OUT_FIELD: "pollen_grass",
+        ATTR_NAME: "Pollen Grass",
+        ATTR_ICON: "mdi:flower",
+        ATTR_FORECAST_VALUES: 0
+    },
+
+    ATTR_FIRE_INDEX: {
+        ATTR_FIELD: "fire_index",
+        ATTR_OUT_FIELD: "fire_index",
+        ATTR_NAME: "Fire Index",
+        ATTR_ICON: "mdi:pine-tree-fire",
+        ATTR_FORECAST_VALUES: 0
+    },
+
     ATTR_MOON_PHASE: {
         ATTR_FIELD: "moon_phase",
         ATTR_OUT_FIELD: "moon_phase",
@@ -281,16 +408,18 @@ def setup_platform(hass, config, add_entities, discovery_info=None):
         forecast_observations = 5
 
     realtime_field = ''
-    for variable in config[CONF_MONITORED_CONDITIONS][ATTR_REALTIME]:
-        realtime_field = realtime_field + SENSOR_TYPES[variable][ATTR_FIELD] + ','
-    if len(realtime_field) > 1:
-        realtime_field = realtime_field[:-1]
+    if ATTR_REALTIME in config[CONF_MONITORED_CONDITIONS]:
+        for variable in config[CONF_MONITORED_CONDITIONS][ATTR_REALTIME]:
+            realtime_field = realtime_field + SENSOR_TYPES[variable][ATTR_FIELD] + ','
+        if len(realtime_field) > 1:
+            realtime_field = realtime_field[:-1]
 
     forecast_field = ''
-    for variable in config[CONF_MONITORED_CONDITIONS][ATTR_FORECAST]:
-        forecast_field = forecast_field + SENSOR_TYPES[variable][ATTR_FIELD] + ','
-    if len(forecast_field) > 1:
-        forecast_field = forecast_field[:-1]
+    if ATTR_FORECAST in config[CONF_MONITORED_CONDITIONS]:
+        for variable in config[CONF_MONITORED_CONDITIONS][ATTR_FORECAST]:
+            forecast_field = forecast_field + SENSOR_TYPES[variable][ATTR_FIELD] + ','
+        if len(forecast_field) > 1:
+            forecast_field = forecast_field[:-1]
 
     forecast_data = ClimacellData(
         api_key=config.get(CONF_API_KEY),
@@ -311,19 +440,21 @@ def setup_platform(hass, config, add_entities, discovery_info=None):
         return
 
     sensors = []
-    for variable in config[CONF_MONITORED_CONDITIONS][ATTR_REALTIME]:
-        sensors.append(ClimacellSensor(forecast_data, variable, name, ATTR_REALTIME))
-        _LOGGER.debug("__init__ setup_platform 'condition:' %s.", variable)
+    if ATTR_REALTIME in config[CONF_MONITORED_CONDITIONS]:
+        for variable in config[CONF_MONITORED_CONDITIONS][ATTR_REALTIME]:
+            sensors.append(ClimacellSensor(forecast_data, variable, name, ATTR_REALTIME))
+            _LOGGER.debug("__init__ setup_platform 'condition:' %s.", variable)
 
-    for variable in config[CONF_MONITORED_CONDITIONS][ATTR_FORECAST]:
-        for observation in range(0, forecast_observations):
-            _LOGGER.debug("__init__ setup_platform 'condition:' %s, day %s, kvalue %s.",
-                          variable, observation, SENSOR_TYPES[variable][ATTR_FORECAST_VALUES])
-            if SENSOR_TYPES[variable][ATTR_FORECAST_VALUES] > 1:
-                for values in range(0, SENSOR_TYPES[variable][ATTR_FORECAST_VALUES]):
-                    sensors.append(ClimacellSensor(forecast_data, variable, name, ATTR_FORECAST, observation, values))
-            else:
-                sensors.append(ClimacellSensor(forecast_data, variable, name, ATTR_FORECAST, observation))
+    if ATTR_FORECAST in config[CONF_MONITORED_CONDITIONS]:
+        for variable in config[CONF_MONITORED_CONDITIONS][ATTR_FORECAST]:
+            for observation in range(0, forecast_observations):
+                _LOGGER.debug("__init__ setup_platform 'condition:' %s, day %s, kvalue %s.",
+                              variable, observation, SENSOR_TYPES[variable][ATTR_FORECAST_VALUES])
+                if SENSOR_TYPES[variable][ATTR_FORECAST_VALUES] > 0:
+                    for values in range(0, SENSOR_TYPES[variable][ATTR_FORECAST_VALUES]):
+                        sensors.append(ClimacellSensor(forecast_data, variable, name, ATTR_FORECAST, observation, values))
+                else:
+                    sensors.append(ClimacellSensor(forecast_data, variable, name, ATTR_FORECAST, observation))
 
     add_entities(sensors, True)
 
@@ -378,11 +509,15 @@ class ClimacellSensor(Entity):
     @property
     def device_state_attributes(self):
         """Return the state attributes."""
-        return {
+        attrs = {
             ATTR_ATTRIBUTION: ATTRIBUTION,
-            ATTR_UNIT_OF_MEASUREMENT: self._unit_of_measurement,
             ATTR_OBSERVATION_TIME: self._observation_time
         }
+
+        if self._unit_of_measurement is not None:
+            attrs[ATTR_UNIT_OF_MEASUREMENT] = self._unit_of_measurement
+
+        return attrs
 
     def update(self):
         """Get the latest data from Climacell and updates the states."""
@@ -400,7 +535,7 @@ class ClimacellSensor(Entity):
             self.sensor_prefix_name = ''
             data = self.forecast_data.forecast_data[self.forecast_observation][SENSOR_TYPES[self.type][ATTR_OUT_FIELD]]
 
-            # _LOGGER.debug("ClimacellSensor.update [%s] - 'data'= %s - %s - %s", self._name, data, self.forecast_value, len(data))
+            #_LOGGER.debug("ClimacellSensor.update [%s] - 'data'= %s - %s - %s", self._name, data, self.forecast_value, len(data))
             if self.forecast_value is not None and self.forecast_value < len(data):
                 data = data[self.forecast_value]
 

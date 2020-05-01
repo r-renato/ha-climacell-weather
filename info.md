@@ -97,6 +97,32 @@ first_quarter, waxing_gibbous, full, waning_gibbous, third_quarter, waning_cresc
 Provides the times of sunset based on location
 >>- *sunrise*<br>
 Provides the times of sunrise based on location
+>>- *pm25*<br>
+Particulate Matter < 2.5 μm
+>>- *pm10*<br>
+Particulate Matter < 10 μm
+>>- *o3*<br>
+Ozone
+>>- *no2*<br>
+Nitrogen Dioxide
+>>- *co*<br>
+Carbon Monoxide
+>>- *so2*<br>
+Sulfur Dioxide
+>>- *epa_aqi*<br>
+Air quality index per US EPA standard
+>>- *epa_primary_pollutant*<br>
+Air quality index of primary pollutant per US EPA standard
+>>- *epa_health_concern*<br>
+Health concern level based on EPA standard: Good, Moderate, Unhealthy for sensitive groups, Unhealthy, Very Unhealthy, Hazardous
+>>- *pollen_tree*<br>
+ClimaCell pollen index for trees (or null if not in season)
+>>- *pollen_weed*<br>
+ClimaCell pollen index for weeds (or null if not in season)
+>>- *pollen_grass*<br>
+ClimaCell pollen index for grass (or null if not in season)
+>>- *fire_index*<br>
+ClimaCell fire hazard index
 >>
 >>**forecast**<br>
 >>*(list)(Optional)*<br>
