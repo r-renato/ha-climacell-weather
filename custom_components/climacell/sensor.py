@@ -402,8 +402,8 @@ def setup_platform(hass, config, add_entities, discovery_info=None):
     else:
         forecast_mode = CONF_DAILY
 
-    if CONF_FORECAST_MODE in config[CONF_MONITORED_CONDITIONS]:
-        forecast_observations = config[CONF_MONITORED_CONDITIONS][CONF_FORECAST_OBSERVATIONS]
+    if CONF_FORECAST_OBSERVATIONS in config[CONF_MONITORED_CONDITIONS]:
+        forecast_observations = config[CONF_MONITORED_CONDITIONS][CONF_FORECAST_OBSERVATIONS][0]
     else:
         forecast_observations = 5
 
