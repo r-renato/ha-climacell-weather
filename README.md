@@ -72,6 +72,8 @@ snow_light, flurries, tstorm, rain_heavy, rain, rain_light, drizzle, fog_light, 
 partly_cloudy, mostly_clear, clear
 >>- *temperature*<br>
 Temperature
+>>- *feels_like*<br>
+Wind chill and heat window based on season
 >>- *humidity*<br>
 Percent relative humidity from 0 - 100 %
 >>- *visibility*<br>
@@ -134,6 +136,8 @@ snow_light, flurries, tstorm, rain_heavy, rain, rain_light, drizzle, fog_light, 
 partly_cloudy, mostly_clear, clear
 >>- *temperature*<br>
 Temperature
+>>- *feels_like*<br>
+Wind chill and heat window based on season
 >>- *precipitation*<br>
 Precipitation intensity
 >>- *precipitation_probability*<br>
