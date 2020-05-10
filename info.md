@@ -5,11 +5,14 @@ The `climacell` platform uses the <a href="https://www.climacell.co/weather-api/
 
 [![hacs_badge](https://img.shields.io/badge/HACS-Default-orange.svg)](https://github.com/custom-components/hacs)
 
-[![License][license-shield]](LICENSE)
+[![License][license-shield]](LICENSE.md)
 
 [![BuyMeCoffee][buymecoffeebadge]][buymecoffee]
 
 _To use this component you must obtain an API key. Visit the the <a href="https://www.climacell.co/weather-api" target="_blank">Climacell</a> site to known how to obtain one._
+
+## **WARNING**
+Realtime and Forecast are two different services, so they consume 1 API call each one.
 
 ## Manual installation
 

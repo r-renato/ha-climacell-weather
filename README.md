@@ -11,6 +11,9 @@ The `climacell` platform uses the <a href="https://www.climacell.co/weather-api/
 
 _To use this component you must obtain an API key. Visit the the <a href="https://www.climacell.co/weather-api" target="_blank">Climacell</a> site to known how to obtain one._
 
+## **WARNING**
+Realtime and Forecast are two different services, so they consume 1 API call each one.
+
 ## Manual installation
 
 1. Using the tool of choice, open the directory (folder) of your HA configuration (there you can find `configuration.yaml`).

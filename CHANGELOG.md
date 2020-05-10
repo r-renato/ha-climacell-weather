@@ -10,7 +10,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ### Changed
 
-## [1.2.0] Unreleased
+## [1.2.0] 2020-05-10
 ### Added
 - Add feels_like for realtime and forecast data
 
