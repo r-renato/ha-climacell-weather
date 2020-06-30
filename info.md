@@ -12,7 +12,7 @@ The `climacell` platform uses the <a href="https://www.climacell.co/weather-api/
 _To use this component you must obtain an API key. Visit the the <a href="https://www.climacell.co/weather-api" target="_blank">Climacell</a> site to known how to obtain one._
 
 ## **WARNING**
-Realtime and Forecast are two different services, so they consume 1 API call each one.
+Realtime, nowcast, hourly and daily are different services, so they consume 1 API call each one.
 
 ## Manual installation
 
@@ -55,115 +55,216 @@ To use the `climacell` custom component you must first obtain a <a href="https:/
 >si or us, based on the temperature preference in Home Assistant.
 
 **monitored_conditions**
->*(list)(Required)*<br>
+>*(objects)(Required)*<br>
 >Conditions to display in the frontend.
 >
+>>**realtime**<br>
+>>*(objects)(Required)*<br>
+>>
+>>>**conditions**<br>
+>>>*(list)(Required)*<br>
+>>>>See the available conditions<br>
+>>>>
+>>>>**scan_interval**
+>>>>*(time)(Optional)*<br>
+>>>>Minimum time interval between updates.
+>>>>
+>>>>>**days**
+>>>>>*(integer)(Optional)*
+>>>>>
+>>>>>**hours**
+>>>>>*(integer)(Optional)*
+>>>>>
+>>>>>**minutes**
+>>>>>*(integer)(Optional)*
+>>>>>
+>>>>>**seconds**
+>>>>>*(integer)(Optional)*
+>>>>>
+>>>>>**milliseconds**
+>>>>>*(integer)(Optional)*
+>>>>
+>>>>**exclude_interval**
+>>>>*(object)(Optional)*<br>
+>>>>Intervals without inquiry.
+>>>>>**(object list)(Required)**
+>>>>>>**Hour:Minute**
+>>>>>>*(string)(Required)*
+>
+>>**daily**<br>
+>>*(objects)(Required)*<br>
+>>
 >>**forecast_observations**<br>
 >>*(integer)(Optional)*<br>
 >>Number of days for which you would like to receive forecast. The valid values are numbers starting from 1 to 7.
 >>Any condition from monitored_conditions (forecast) will generate a sensor with entity_id <condition>_<day>d. 
 >>
->>Default value: 4
+>>Default value: 5
 >> 
->>**realtime**<br>
->>*(list)(Required)*<br>
+>>>**conditions**<br>
+>>>*(list)(Required)*<br>
+>>>>See the available conditions<br>
+>>>>
+>>>>**scan_interval**
+>>>>*(time)(Optional)*<br>
+>>>>Minimum time interval between updates.
+>>>>
+>>>>>**days**
+>>>>>*(integer)(Optional)*
+>>>>>
+>>>>>**hours**
+>>>>>*(integer)(Optional)*
+>>>>>
+>>>>>**minutes**
+>>>>>*(integer)(Optional)*
+>>>>>
+>>>>>**seconds**
+>>>>>*(integer)(Optional)*
+>>>>>
+>>>>>**milliseconds**
+>>>>>*(integer)(Optional)*
+>>>>
+>>>>**exclude_interval**
+>>>>*(object)(Optional)*<br>
+>>>>Intervals without inquiry.
+>>>>>**(object list)(Required)**
+>>>>>>**Hour:Minute**
+>>>>>>*(string)(Required)*
+>
+>>**hourly**<br>
+>>*(objects)(Required)*<br>
 >>
->>- *weather_condition*<br>
-A textual field that conveys the weather conditions. Possible values are freezing_rain_heavy, freezing_rain,
-freezing_rain_light, freezing_drizzle, ice_pellets_heavy, ice_pellets, ice_pellets_light, snow_heavy, snow, 
-snow_light, flurries, tstorm, rain_heavy, rain, rain_light, drizzle, fog_light, fog, cloudy, mostly_cloudy, 
-partly_cloudy, mostly_clear, clear
->>- *temperature*<br>
-Temperature
->>- *feels_like*<br>
-Wind chill and heat window based on season
->>- *humidity*<br>
-Percent relative humidity from 0 - 100 %
->>- *visibility*<br>
-Visibility distance
->>- *cloud_cover*<br>
-Fraction of the sky obscured by clouds
->>- *precipitation*<br>
-Precipitation intensity
->>- *precipitation_type*<br>
-Types are: none, rain, snow, ice pellets, and freezing rain
->>- *pressure*<br>
-Barometric pressure (at surface)
->>- *wind_speed*<br>
-Wind speed
->>- *wind_direction*<br>
-Wind direction in polar degrees 0-360 where 0 = North
->>- *wind_gust*<br>
-Wind gust speed
->>- *moon_phase*<br>
-This field is available in hourly and daily endpoints. Available values include new_moon, waxing_crescent,
-first_quarter, waxing_gibbous, full, waning_gibbous, third_quarter, waning_crescent
->>- *sunset*<br>
-Provides the times of sunset based on location
->>- *sunrise*<br>
-Provides the times of sunrise based on location
->>- *pm25*<br>
-Particulate Matter < 2.5 μm
->>- *pm10*<br>
-Particulate Matter < 10 μm
->>- *o3*<br>
-Ozone
->>- *no2*<br>
-Nitrogen Dioxide
->>- *co*<br>
-Carbon Monoxide
->>- *so2*<br>
-Sulfur Dioxide
->>- *epa_aqi*<br>
-Air quality index per US EPA standard
->>- *epa_primary_pollutant*<br>
-Air quality index of primary pollutant per US EPA standard
->>- *epa_health_concern*<br>
-Health concern level based on EPA standard: Good, Moderate, Unhealthy for sensitive groups, Unhealthy, Very Unhealthy, Hazardous
->>- *pollen_tree*<br>
-ClimaCell pollen index for trees (or null if not in season)
->>- *pollen_weed*<br>
-ClimaCell pollen index for weeds (or null if not in season)
->>- *pollen_grass*<br>
-ClimaCell pollen index for grass (or null if not in season)
->>- *fire_index*<br>
-ClimaCell fire hazard index
+>>**forecast_observations**<br>
+>>*(integer)(Optional)*<br>
+>>Number of days for which you would like to receive forecast. The valid values are numbers starting from 1 to 7.
+>>Any condition from monitored_conditions (forecast) will generate a sensor with entity_id <condition>_<day>d. 
 >>
->>**forecast**<br>
->>*(list)(Optional)*<br>
+>>Default value: 5
+>> 
+>>>**conditions**<br>
+>>>*(list)(Required)*<br>
+>>>>See the available conditions<br>
+>>>>
+>>>>**scan_interval**
+>>>>*(time)(Optional)*<br>
+>>>>Minimum time interval between updates.
+>>>>
+>>>>>**days**
+>>>>>*(integer)(Optional)*
+>>>>>
+>>>>>**hours**
+>>>>>*(integer)(Optional)*
+>>>>>
+>>>>>**minutes**
+>>>>>*(integer)(Optional)*
+>>>>>
+>>>>>**seconds**
+>>>>>*(integer)(Optional)*
+>>>>>
+>>>>>**milliseconds**
+>>>>>*(integer)(Optional)*
+>>>>
+>>>>**exclude_interval**
+>>>>*(object)(Optional)*<br>
+>>>>Intervals without inquiry.
+>>>>>**(object list)(Required)**
+>>>>>>**Hour:Minute**
+>>>>>>*(string)(Required)*
+>
+>>**nowcast**<br>
+>>*(objects)(Required)*<br>
 >>
->>- *weather_condition*<br>
-A textual field that conveys the weather conditions. Possible values are freezing_rain_heavy, freezing_rain,
-freezing_rain_light, freezing_drizzle, ice_pellets_heavy, ice_pellets, ice_pellets_light, snow_heavy, snow, 
-snow_light, flurries, tstorm, rain_heavy, rain, rain_light, drizzle, fog_light, fog, cloudy, mostly_cloudy, 
-partly_cloudy, mostly_clear, clear
->>- *temperature*<br>
-Temperature
->>- *feels_like*<br>
-Wind chill and heat window based on season
->>- *precipitation*<br>
-Precipitation intensity
->>- *precipitation_probability*<br>
-The chance that precipitation will occur at the forecast time within the hour or day
+>>**timestep**<br>
+>>*(integer)(Optional)*<br>
+>>Number of minutes 1/60
+>>
+>>Default value: 5
+>> 
+>>**forecast_observations**<br>
+>>*(integer)(Optional)*<br>
+>>Number of days for which you would like to receive forecast. The valid values are numbers starting from 1 to 7.
+>>Any condition from monitored_conditions (forecast) will generate a sensor with entity_id <condition>_<day>d. 
+>>
+>>Default value: 5
+>> 
+>>>**conditions**<br>
+>>>*(list)(Required)*<br>
+>>>>See the available conditions<br>
+>>>>
+>>>>**scan_interval**
+>>>>*(time)(Optional)*<br>
+>>>>Minimum time interval between updates.
+>>>>
+>>>>>**days**
+>>>>>*(integer)(Optional)*
+>>>>>
+>>>>>**hours**
+>>>>>*(integer)(Optional)*
+>>>>>
+>>>>>**minutes**
+>>>>>*(integer)(Optional)*
+>>>>>
+>>>>>**seconds**
+>>>>>*(integer)(Optional)*
+>>>>>
+>>>>>**milliseconds**
+>>>>>*(integer)(Optional)*
+>>>>
+>>>>**exclude_interval**
+>>>>*(object)(Optional)*<br>
+>>>>Intervals without inquiry.
+>>>>>**(object list)(Required)**
+>>>>>>**Hour:Minute**
+>>>>>>*(string)(Required)*
 
-**scan_interval**
->*(time)(Optional)*<br>
->Minimum time interval between updates.
->>
->>**days**
->>*(integer)(Optional)*
->>
->>**hours**
->>*(integer)(Optional)*
->>
->>**minutes**
->>*(integer)(Optional)*
->>
->>**seconds**
->>*(integer)(Optional)*
->>
->>**milliseconds**
->>*(integer)(Optional)*
+
+### Condition information
+
+|        **Condition**        |           **Services**           |             **Description**         |
+|-----------------------------|----------------------------------|-------------------------------------|
+| temperature                 | realtime, nowcast, hourly, daily | Temperature             |
+| feels_like                  | realtime, nowcast, hourly, daily | Wind chill and heat window based on season             |
+| dewpoint                    | realtime, nowcast, hourly        | Temperature of the dew point             |
+| humidity                    | realtime, nowcast, hourly, daily | Percent relative humidity from 0 - 100%             |
+| wind_speed                  | realtime, nowcast, hourly, daily | Wind speed             |
+| wind_direction              | realtime, nowcast, hourly, daily | Wind direction in polar degrees 0-360 where 0 is North             |
+| wind_gust                   | realtime, nowcast, hourly        | Wind gust speed             |
+| pressure                    | realtime, nowcast, hourly, daily | Barometric pressure (at surface)             |
+| precipitation               | realtime, nowcast, hourly, daily | Precipitation intensity             |
+| precipitation_type          | realtime, nowcast, hourly        | The type of precipitation: none, rain, snow, ice pellets, and freezing rain             |
+| precipitation_probability   | hourly, daily                    | The chance that precipitation will occur at the forecast time within the hour or day             |
+| precipitation_accumulation  | hourly, daily                    | The accumulated amount of precipitation in the selected timestep             |
+| sunset                      | realtime, nowcast, hourly, daily | The times sunset based on location             |
+| sunrise                     | realtime, nowcast, hourly, daily | The times sunrise based on location             |
+| visibility                  | realtime, nowcast, hourly, daily | Visibility distance             |
+| cloud_cover                 | realtime, nowcast, hourly        | Fraction of the sky obscured by clouds             |
+| cloud_base                  | realtime, nowcast, hourly        | The lowest level at which the air contains a perceptible quantity of cloud particles: NULL (when there are no clouds)             |
+| cloud_ceiling               | realtime, nowcast, hourly        | The height of the lowest layer of clouds which covers more than half of the sky: NULL (when there are no clouds)             |
+| satellite_cloud             |                                  | Fraction of the sky obscured by clouds, as observed by satellites             |
+| surface_shortwave_radiation | realtime, nowcast, hourly        | Solar radiation reaching the surface             |
+| moon_phase                  | realtime, hourly                 | The shape of the directly sunlit portion of the Moon: new, waxing_crescent, first_quarter, waxing_gibbous, full, waning_gibbous, third_quarter, waning_crescent             |
+| weather_condition           | realtime, nowcast, hourly, daily | A textual field that conveys the weather conditions: freezing_rain_heavy, freezing_rain, freezing_rain_light, freezing_drizzle, ice_pellets_heavy, ice_pellets, ice_pellets_light, snow_heavy, snow, snow_light, flurries, tstorm, rain_heavy, rain, rain_light, drizzle, fog_light, fog, cloudy, mostly_cloudy, partly_cloudy, mostly_clear, clear            |
+| weather_groups              |                                  | All weather elements that convey the weather conditions             |
+| pm25                        | realtime, nowcast, hourly        | Particulate Matter < 2.5 μm             |
+| pm10                        | realtime, nowcast, hourly        | Particulate Matter < 10 μm             |
+| o3                          | realtime, nowcast, hourly        | Ozone             |
+| no2                         | realtime, nowcast, hourly        | Nitrogen Dioxide             |
+| co                          | realtime, nowcast, hourly        | Carbon Monoxide             |
+| so2                         | realtime, nowcast, hourly        | Sulfur Dioxide             |
+| epa_aqi                     | realtime, nowcast, hourly        | Air quality index per US EPA standard             |
+| epa_primary_pollutant       | realtime, nowcast, hourly        | Air quality index of primary pollutant per US EPA standard              |
+| epa_health_concern          | realtime, nowcast, hourly        | Health concern level based on EPA standard: Good, Moderate, Unhealthy for sensitive groups, Unhealthy, Very Unhealthy, Hazardous             |
+| china_aqi                   | realtime, nowcast, hourly        | Air quality index per China MEP standard             |
+| china_primary_pollutant     | realtime, nowcast, hourly        | Air quality index of primary pollutant per China MEP standard             |
+| china_health_concern        | realtime, nowcast, hourly        | Health concern level based on China MEP standard             |
+| pollen_tree                 | realtime, nowcast, hourly        | ClimaCell pollen index for trees             |
+| pollen_weed                 | realtime, nowcast, hourly        | ClimaCell pollen index for weeds             |
+| pollen_grass                | realtime, nowcast, hourly        | ClimaCell pollen index for grass             |
+| road_risk_score             | realtime, nowcast, hourly        | ClimaCell road risk (EU and US only): Low risk, Low-moderate risk, Moderate risk, High risk, Extreme risk             |
+| road_risk                   | realtime, nowcast, hourly        | The deprecated version of the above-mentioned: low_risk, moderate_risk, mod_hi_risk, high_risk, extreme_risk             |
+| road_risk_confidence        | realtime, nowcast, hourly        | An integer between 1 and 100 that is indicative of how confident we are in our road risk prediction (EU and US only)             |
+| road_risk_conditions        | realtime, nowcast, hourly        | Main weather conditions that are impacting the road risk score (EU and US only)             |
+| fire_index                  | realtime                         | ClimaCell fire hazard index             |
 
 ## Integration Examples
 
@@ -172,37 +273,248 @@ sensor:
 ## Weather climatecell.co
   - platform: climacell
     api_key: !secret climacell_api_key
-    name: cc
+    name: example
     latitude: !secret gps_geo_home_lt
     longitude: !secret gps_geo_home_ln
     monitored_conditions:
       realtime:
-        - weather_condition
-        - temperature
-        - humidity
-        - visibility
-        - cloud_cover
-        - precipitation
-        - precipitation_type
-        - pressure
-        - wind_speed
-        - wind_direction
-        - wind_gust
-        - moon_phase
-        - sunset
-        - sunrise
-      forecast:
-        - weather_condition
-        - temperature
-        - precipitation
-        - precipitation_probability
-    scan_interval:
-      # At least one of these must be specified:
-      days: 0
-      hours: 1
-      minutes: 0
-      seconds: 0
-      milliseconds: 0
+        conditions:
+          - temperature
+          - feels_like
+          - dewpoint
+          - humidity
+          - wind_speed
+          - wind_direction
+          - wind_gust
+          - pressure
+          - precipitation
+          - precipitation_type
+#          - precipitation_probability
+#          - precipitation_accumulation
+          - sunset
+          - sunrise
+          - visibility
+          - cloud_cover
+          - cloud_base
+          - cloud_ceiling
+#          - satellite_cloud
+          - surface_shortwave_radiation
+          - moon_phase
+          - weather_condition
+#          - weather_groups
+          - pm25
+          - pm10
+          - o3
+          - no2
+          - co
+          - so2
+          - epa_aqi
+          - epa_primary_pollutant
+          - epa_health_concern
+#          - china_aqi
+#          - china_primary_pollutant
+#          - china_health_concern
+          - pollen_tree
+          - pollen_weed
+          - pollen_grass
+          - road_risk_score
+#          - road_risk
+          - road_risk_confidence
+          - road_risk_conditions
+          - fire_index
+        update: auto
+        scan_interval:
+          # At least one of these must be specified:
+          days: 0
+          hours: 0
+          minutes: 30
+          seconds: 0
+          milliseconds: 0
+        exclude_interval:
+          1:
+            - "23:30"
+            - "06:00"
+      daily:
+        forecast_observations: 1
+        conditions:
+          - temperature
+          - feels_like
+#          - dewpoint
+          - humidity
+          - wind_speed
+          - wind_direction
+#          - wind_gust
+          - pressure
+          - precipitation
+#          - precipitation_type
+          - precipitation_probability
+          - precipitation_accumulation
+          - sunset
+          - sunrise
+          - visibility
+#          - cloud_cover
+#          - cloud_base
+#          - cloud_ceiling
+#          - satellite_cloud
+#          - surface_shortwave_radiation
+#          - moon_phase
+          - weather_condition
+#          - weather_groups
+#          - pm25
+#          - pm10
+#          - o3
+#          - no2
+#          - co
+#          - so2
+#          - epa_aqi
+#          - epa_primary_pollutant
+#          - epa_health_concern
+#          - china_aqi
+#          - china_primary_pollutant
+#          - china_health_concern
+#          - pollen_tree
+#          - pollen_weed
+#          - pollen_grass
+#          - road_risk_score
+#          - road_risk
+#          - road_risk_confidence
+#          - road_risk_conditions
+#          - fire_index
+        scan_interval:
+          # At least one of these must be specified:
+          days: 0
+          hours: 3
+          minutes: 0
+          seconds: 0
+          milliseconds: 0
+        exclude_interval:
+          1:
+            - "10:00"
+            - "12:00"
+          2:
+            - "00:00"
+            - "06:30"
+      hourly:
+        forecast_observations: 1
+        conditions:
+          - temperature
+          - feels_like
+          - dewpoint
+          - humidity
+          - wind_speed
+          - wind_direction
+          - wind_gust
+          - pressure
+          - precipitation
+          - precipitation_type
+          - precipitation_probability
+#          - precipitation_accumulation
+          - sunset
+          - sunrise
+          - visibility
+          - cloud_cover
+          - cloud_base
+          - cloud_ceiling
+#          - satellite_cloud
+          - surface_shortwave_radiation
+          - moon_phase
+          - weather_condition
+#          - weather_groups
+          - pm25
+          - pm10
+          - o3
+          - no2
+          - co
+          - so2
+          - epa_aqi
+          - epa_primary_pollutant
+          - epa_health_concern
+#          - china_aqi
+#          - china_primary_pollutant
+#          - china_health_concern
+          - pollen_tree
+          - pollen_weed
+          - pollen_grass
+          - road_risk_score
+#          - road_risk
+          - road_risk_confidence
+          - road_risk_conditions
+#          - fire_index
+        scan_interval:
+          # At least one of these must be specified:
+          days: 0
+          hours: 1
+          minutes: 0
+          seconds: 0
+          milliseconds: 0
+        exclude_interval:
+          1:
+            - "01:00"
+            - "05:00"
+      nowcast:
+        timestep: 5
+        forecast_observations: 1
+        conditions:
+          - temperature
+          - feels_like
+          - dewpoint
+          - humidity
+          - wind_speed
+          - wind_direction
+          - wind_gust
+          - pressure
+          - precipitation
+          - precipitation_type
+#          - precipitation_probability
+#          - precipitation_accumulation
+          - sunset
+          - sunrise
+          - visibility
+          - cloud_cover
+          - cloud_base
+          - cloud_ceiling
+#          - satellite_cloud
+          - surface_shortwave_radiation
+#          - moon_phase
+          - weather_condition
+#          - weather_groups
+          - pm25
+          - pm10
+          - o3
+          - no2
+          - co
+          - so2
+          - epa_aqi
+          - epa_primary_pollutant
+          - epa_health_concern
+#          - china_aqi
+#          - china_primary_pollutant
+#          - china_health_concern
+          - pollen_tree
+          - pollen_weed
+          - pollen_grass
+          - road_risk_score
+#          - road_risk
+          - road_risk_confidence
+          - road_risk_conditions
+#          - fire_index
+        scan_interval:
+          # At least one of these must be specified:
+          days: 0
+          hours: 0
+          minutes: 5
+          seconds: 0
+          milliseconds: 0
+        exclude_interval:
+          1:
+            - "09:00"
+            - "10:00"
+          2:
+            - "13:00"
+            - "14:00"
+          3:
+            - "18:00"
+            - "07:00"
 ```
 
 The `climacell` custom component exposes a sensor for each monitored condition.

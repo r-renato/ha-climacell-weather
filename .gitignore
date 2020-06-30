@@ -1,0 +1,14 @@
+# ####### ####### #######
+# Folders
+
+.idea
+__pycache__
+/node_modules/
+/.rpt2_cache/
+
+# ####### ####### #######
+# Files
+package-lock.json
+rollup.watch.sh
+rollup.config.js
+

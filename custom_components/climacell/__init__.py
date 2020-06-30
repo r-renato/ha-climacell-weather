@@ -3,7 +3,7 @@
 import asyncio
 import logging
 
-from homeassistant.util import Throttle
+
 from homeassistant.core import callback
 
 import datetime
@@ -12,6 +12,9 @@ from datetime import timedelta
 import json
 import requests
 import socket
+
+from custom_components.climacell.daily_api_const import CONF_DAILY
+from custom_components.climacell.data_provider import DataProviderBase
 
 DOMAIN = "climacell"
 
@@ -36,86 +39,252 @@ def async_setup(hass, config):
     return True
 
 
-class ClimacellData:
-    """Get the latest data from Climacell."""
-
+class ClimacellRealtimeDataProvider(DataProviderBase):
     def __init__(self, api_key, latitude, longitude, units,
-                 realtime_fields, forecast_fields, forecast_mode, forecast_observations, interval):
+                 realtime_fields, interval, exceptions):
+        super(ClimacellRealtimeDataProvider, self)\
+            .__init__(name="realtime", interval=interval, exceptions=exceptions)
 
         """Initialize the data object."""
-        self._api_key = api_key
-        self.latitude = latitude
-        self.longitude = longitude
-        self.units = units
-        self.realtime_fields = realtime_fields
-        self.forecast_fields = forecast_fields
-        self.forecast_mode = forecast_mode
-        self.forecast_observations = forecast_observations
+        self.__api_key = api_key
+        self.__latitude = latitude
+        self.__longitude = longitude
+        self.__realtime_fields = realtime_fields
 
-        self.realtime_data = None
-        self.forecast_data = None
-        self.unit_system = None
-        self.data_currently = None
-        self.data_minutely = None
-        self.data_hourly = None
-        self.data_daily = None
-        self.data_alerts = None
+        self.data = None
 
-        self._headers = {
+        self.__headers = {
             'Content-Type': 'application/json',
-            # 'Content-Type': 'application/json; charset=utf-8',
             'apikey': api_key,
             # 'X-Real-Ip': ip
         }
 
         self._params = 'lat=' + str(latitude) + '&lon=' + str(longitude) + '&unit_system=' + units
 
-        # Apply throttling to methods using configured interval
-        self.update = Throttle(interval)(self._update)
-        # self.update_currently = Throttle(interval)(self._update_currently)
-        # self.update_minutely = Throttle(interval)(self._update_minutely)
-        # self.update_hourly = Throttle(interval)(self._update_hourly)
-        # self.update_daily = Throttle(interval)(self._update_daily)
-        # self.update_alerts = Throttle(interval)(self._update_alerts)
+        _LOGGER.debug("ClimacellRealtimeDataProvider initializated for: %s.", self.__realtime_fields)
 
-    def _update(self):
-        """Get the latest data from Climacell."""
+    def _user_update(self):
+        """Get the latest data from climacell"""
 
-
-        if self.realtime_fields is not None:
-            # _LOGGER.debug("ClimacellData _retrieve_data _params: %s - realtime_fields: %s", self._params, self.realtime_fields)
-            querystring = self._params + '&fields=' + self.realtime_fields  # + '&start_time=now'
+        if self.__realtime_fields is not None:
+            querystring = self._params + '&fields=' + self.__realtime_fields  # + '&start_time=now'
             url = _ENDPOINT + '/weather/realtime'
-            self.realtime_data = self._retrieve_data(url, self._headers, querystring)
+            _LOGGER.debug("ClimacellRealtimeDataProvider:_user_update url: %s\%s.", url, querystring)
+            self.data = self.__retrieve_data(url, self.__headers, querystring)
 
-        if self.forecast_fields is not None:
-            end_date = datetime.datetime.utcnow()\
-                       + (timedelta(days=self.forecast_observations)
-                          if self.forecast_mode == 'daily' else timedelta(hours=self.forecast_observations))
-            querystring = self._params + '&fields=' + self.forecast_fields\
-                          + '&start_time=now&end_time='\
-                          + end_date.replace(microsecond=0).isoformat()
-            url = _ENDPOINT + '/weather/forecast/' + self.forecast_mode
+        return True
 
-            # _LOGGER.debug("ClimacellData _retrieve_data _params: %s - realtime_fields: %s", self._params, self.realtime_fields)
-            self.forecast_data = self._retrieve_data(url, self._headers, querystring)
-
-    def _retrieve_data(self, url, headers, querystring):
+    def __retrieve_data(self, url, headers, querystring):
         result = None
 
         try:
-            _LOGGER.debug("ClimacellData _retrieve_data url: %s - headers: %s", url, self._headers)
-            _LOGGER.debug("ClimacellData _retrieve_data querystring: %s", querystring)
+            _LOGGER.debug("_retrieve_data url: %s - headers: %s - querystring: %s",
+                          url, self.__headers, querystring)
 
             response = requests.request("GET", url,
                                         headers=headers, params=querystring,
                                         timeout=(10.05, 27), verify=True
                                         )
-            _LOGGER.debug("ClimacellData _retrieve_data response data: %s", response.text)
 
             if response.status_code == 200:
                 result = json.loads(response.text)
 
+            _LOGGER.debug("_retrieve_data response.text: %s", response.text)
+
+        except socket.error as err:
+            _LOGGER.error("Unable to connect to Climatecell '%s' while try to retrieve data from %s.", err, url)
+
+        return result
+
+
+class ClimacellDailyDataProvider(DataProviderBase):
+    def __init__(self, api_key, latitude, longitude, units,
+                 daily_fields, observations, interval, exceptions):
+        super(ClimacellDailyDataProvider, self)\
+            .__init__(name="daily", interval=interval, exceptions=exceptions)
+
+        """Initialize the data object."""
+        self.__api_key = api_key
+        self.__latitude = latitude
+        self.__longitude = longitude
+        self.__daily_fields = daily_fields
+        self.__observations = observations
+
+        self.data = None
+
+        self.__headers = {
+            'Content-Type': 'application/json',
+            'apikey': api_key,
+            # 'X-Real-Ip': ip
+        }
+
+        self._params = 'lat=' + str(latitude) + '&lon=' + str(longitude) + '&unit_system=' + units
+
+        _LOGGER.debug("ClimacellDailyDataProvider initializated for: [%s] .", self.__daily_fields)
+
+    def _user_update(self):
+        """Get the latest data from climacell"""
+
+        if self.__daily_fields is not None:
+            now_utc = datetime.datetime.utcnow().replace(hour=0, minute=0, second=0, microsecond=0)
+            end_date = now_utc + (timedelta(days=self.__observations))
+
+            querystring = self._params + '&fields=' + self.__daily_fields \
+                          + '&start_time=' + now_utc.isoformat() \
+                          + '&end_time=' + end_date.isoformat()
+            url = _ENDPOINT + '/weather/forecast/daily'
+
+            # _LOGGER.debug("ClimacellData _retrieve_data _params: %s - realtime_fields: %s", self._params, self.realtime_fields)
+            self.data = self.__retrieve_data(url, self.__headers, querystring)
+
+        return True
+
+    def __retrieve_data(self, url, headers, querystring):
+        result = None
+
+        try:
+            _LOGGER.debug("_retrieve_data url: %s - headers: %s - querystring: %s",
+                          url, self.__headers, querystring)
+
+            response = requests.request("GET", url,
+                                        headers=headers, params=querystring,
+                                        timeout=(10.05, 27), verify=True
+                                        )
+
+            if response.status_code == 200:
+                result = json.loads(response.text)
+
+            _LOGGER.debug("_retrieve_data response.text: %s", response.text)
+        except socket.error as err:
+            _LOGGER.error("Unable to connect to Climatecell '%s' while try to retrieve data from %s.", err, url)
+
+        return result
+
+
+class ClimacellHourlyDataProvider(DataProviderBase):
+    def __init__(self, api_key, latitude, longitude, units,
+                 daily_fields, observations, interval, exceptions):
+        super(ClimacellHourlyDataProvider, self)\
+            .__init__(name="hourly", interval=interval, exceptions=exceptions)
+
+        """Initialize the data object."""
+        self.__api_key = api_key
+        self.__latitude = latitude
+        self.__longitude = longitude
+        self.__daily_fields = daily_fields
+        self.__observations = observations
+
+        self.data = None
+
+        self.__headers = {
+            'Content-Type': 'application/json',
+            'apikey': api_key,
+            # 'X-Real-Ip': ip
+        }
+
+        self._params = 'lat=' + str(latitude) + '&lon=' + str(longitude) + '&unit_system=' + units
+
+        _LOGGER.debug("ClimacellHourlyDataProvider initializated for: [%s] .", self.__daily_fields)
+
+    def _user_update(self):
+        """Get the latest data from climacell"""
+
+        if self.__daily_fields is not None:
+            now_utc = datetime.datetime.utcnow().replace(microsecond=0)
+            end_date = now_utc + (timedelta(hours=self.__observations))
+
+            querystring = self._params + '&fields=' + self.__daily_fields \
+                          + '&start_time=' + now_utc.isoformat() \
+                          + '&end_time=' + end_date.isoformat()
+            url = _ENDPOINT + '/weather/forecast/hourly'
+
+            # _LOGGER.debug("ClimacellData _retrieve_data _params: %s - realtime_fields: %s", self._params, self.realtime_fields)
+            self.data = self.__retrieve_data(url, self.__headers, querystring)
+
+        return True
+
+    def __retrieve_data(self, url, headers, querystring):
+        result = None
+
+        try:
+            _LOGGER.debug("_retrieve_data url: %s - headers: %s - querystring: %s",
+                          url, self.__headers, querystring)
+
+            response = requests.request("GET", url,
+                                        headers=headers, params=querystring,
+                                        timeout=(10.05, 27), verify=True
+                                        )
+
+            if response.status_code == 200:
+                result = json.loads(response.text)
+
+            _LOGGER.debug("_retrieve_data response.text: %s", response.text)
+        except socket.error as err:
+            _LOGGER.error("Unable to connect to Climatecell '%s' while try to retrieve data from %s.", err, url)
+
+        return result
+
+
+class ClimacellNowcastDataProvider(DataProviderBase):
+    def __init__(self, api_key, latitude, longitude, units,
+                 api_fields, timestep, observations, interval, exceptions):
+        super(ClimacellNowcastDataProvider, self) \
+            .__init__(name="nowcast", interval=interval, exceptions=exceptions)
+
+        """Initialize the data object."""
+        self.__api_key = api_key
+        self.__latitude = latitude
+        self.__longitude = longitude
+        self.__daily_fields = api_fields
+        self.__timestep = timestep
+        self.__observations = observations
+
+        self.data = None
+
+        self.__headers = {
+            'Content-Type': 'application/json',
+            'apikey': api_key,
+            # 'X-Real-Ip': ip
+        }
+
+        self._params = 'lat=' + str(latitude) + '&lon=' + str(longitude) + '&unit_system=' + units
+
+        _LOGGER.debug("ClimacellNowcastDataProvider initializated for: [%s] .", self.__daily_fields)
+
+    def _user_update(self):
+        """Get the latest data from climacell"""
+
+        if self.__daily_fields is not None:
+            now_utc = datetime.datetime.utcnow().replace(microsecond=0)
+            end_date = now_utc + (timedelta(minutes=(self.__timestep * self.__observations)))
+
+            querystring = self._params + '&fields=' + self.__daily_fields \
+                          + '&timestep=' + str(self.__timestep) \
+                          + '&start_time=now' \
+                          + '&end_time=' + end_date.isoformat()
+            url = _ENDPOINT + '/weather/nowcast'
+
+            # _LOGGER.debug("ClimacellData _retrieve_data _params: %s - realtime_fields: %s", self._params, self.realtime_fields)
+            self.data = self.__retrieve_data(url, self.__headers, querystring)
+
+        return True
+
+    def __retrieve_data(self, url, headers, querystring):
+        result = None
+
+        try:
+            _LOGGER.debug("_retrieve_data url: %s - headers: %s - querystring: %s",
+                          url, self.__headers, querystring)
+
+            response = requests.request("GET", url,
+                                        headers=headers, params=querystring,
+                                        timeout=(10.05, 27), verify=True
+                                        )
+
+            if response.status_code == 200:
+                result = json.loads(response.text)
+
+            _LOGGER.debug("_retrieve_data response.text: %s", response.text)
         except socket.error as err:
             _LOGGER.error("Unable to connect to Climatecell '%s' while try to retrieve data from %s.", err, url)
 
