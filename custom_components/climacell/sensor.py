@@ -302,10 +302,10 @@ class ClimacellAbstractSensor(Entity):
         if self._observation is not None:
             if self.__timestep is None:
                 return f"{self.__friendly_name} {self.__sensor_name} " \
-                       f"{self._sensor_prefix_name} {self._observation+1} {self.__sensor_suffix_name}"
+                       f"{self._sensor_prefix_name} {self._observation+1}{self.__sensor_suffix_name}"
             else:
                 return f"{self.__friendly_name} {self.__sensor_name} " \
-                       f"{self._sensor_prefix_name} {str(self.__timestep * (self._observation+1)).zfill(2)} " \
+                       f"{self._sensor_prefix_name} {str(self.__timestep * (self._observation+1)).zfill(2)}" \
                        f"{self.__sensor_suffix_name}"
         else:
             return f"{self.__friendly_name} {self.__sensor_name}"
