@@ -29,13 +29,11 @@ To use the `climacell` custom component you must first obtain a <a href="https:/
 
 <dl>
   <dt>api_key</dt>
-  <dd>(string)(Required)<br>Your API key.</dd>
+  <dd><i>(string)(Required)</i><br>Your API key.</dd>  
   
   <dt>name</dt>
-  <dd>(string)(Optional)</dd>
-  <dd>Additional name for the sensors.</dd>
-  <dd>_Default value:_</dd>
-  <dd>Climacell</dd>
+  <dd><i>(string)(Optional)</i><br>Additional name for the sensors.</dd>
+  <dd><i>Default value:</i><br>Climacell</dd>
 </dl>
 
 **latitude**
