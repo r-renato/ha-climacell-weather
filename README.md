@@ -28,22 +28,14 @@ To use the `climacell` custom component you must first obtain a <a href="https:/
 ### Sensor variables
 
 <dl>
-    <dt>Term 1</dt>
-    <dd>definition 1</dd>
-    <dd>definition 2</dd>
-    <dt>Term 2</dt>
-    <dd>definition 1</dd>
-    <dd>definition 2</dd>
-</dl>
-
-<dl>
   <dt>api_key</dt>
-  <dd>(string)(Required)</dd>
+  <dd>(string)(Required)<br>Your API key.</dd>
   <dd>Your API key.</dd>
+  
   <dt>name</dt>
   <dd>(string)(Optional)</dd>
   <dd>Additional name for the sensors.</dd>
-  <dd>Default value:</dd>
+  <dd>_Default value:_</dd>
   <dd>Climacell</dd>
 </dl>
 
