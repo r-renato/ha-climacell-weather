@@ -26,12 +26,17 @@ Realtime, nowcast, hourly and daily are different services, so they consume 1 AP
 To use the `climacell` custom component you must first obtain a <a href="https://www.climacell.co/weather-api/pricing/">API key</a>. 
 
 ### Sensor variables
-
-**api_key**
->(string)(Required)<br>
-
-**name**
->(string)(Optional)<br>
+{% configuration %}
+api_key:
+  description: Your API key.
+  required: true
+  type: string
+name:
+  description: Additional name for the sensors.
+  required: false
+  default: Climacell
+  type: string
+{% endconfiguration %}
 
 **latitude**
 >*(float)(Optional)*<br>

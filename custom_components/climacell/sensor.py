@@ -24,7 +24,7 @@ from custom_components.climacell.global_const import CONF_UNITS, CONF_ALLOWED_UN
     ATTR_OUT_FIELD, CONF_FORECAST_OBSERVATIONS, ATTR_FORECAST_VALUES, CONF_TIMESTEP
 from custom_components.climacell.hourly_api_const import CONF_HOURLY, SCHEMA_HOURLY_CONDITIONS
 from custom_components.climacell.nowcast_api_const import SCHEMA_NOWCAST_CONDITIONS, CONF_NOWCAST
-from custom_components.climacell.realtime_api_const import REALTIME_CONDITIONS, CONF_REALTIME, \
+from custom_components.climacell.realtime_api_const import CONF_REALTIME, \
     SCHEMA_REALTIME_CONDITIONS
 from . import DOMAIN, ClimacellRealtimeDataProvider, ClimacellDailyDataProvider, ClimacellHourlyDataProvider, \
     ClimacellNowcastDataProvider
@@ -120,7 +120,7 @@ def setup_platform(hass, config, add_entities, discovery_info=None):
         daily_field = ''
         daily_conf = config[CONF_MONITORED_CONDITIONS][CONF_DAILY]
         daily_observations = daily_conf[CONF_FORECAST_OBSERVATIONS][0]\
-            if CONF_FORECAST_OBSERVATIONS in daily_conf else SCAN_INTERVAL
+            if CONF_FORECAST_OBSERVATIONS in daily_conf else 5
         daily_interval = daily_conf[CONF_SCAN_INTERVAL] if CONF_SCAN_INTERVAL in daily_conf else SCAN_INTERVAL
         daily_exclude = daily_conf[CONF_EXCLUDE_INTERVAL] if CONF_EXCLUDE_INTERVAL in daily_conf else None
         daily_update = daily_conf[CONF_UPDATE][0] if CONF_UPDATE in daily_conf else ATTR_AUTO
@@ -180,7 +180,7 @@ def setup_platform(hass, config, add_entities, discovery_info=None):
         hourly_field = ''
         hourly_conf = config[CONF_MONITORED_CONDITIONS][CONF_HOURLY]
         hourly_observations = hourly_conf[CONF_FORECAST_OBSERVATIONS][0] \
-            if CONF_FORECAST_OBSERVATIONS in hourly_conf else SCAN_INTERVAL
+            if CONF_FORECAST_OBSERVATIONS in hourly_conf else 5
         hourly_interval = hourly_conf[CONF_SCAN_INTERVAL] if CONF_SCAN_INTERVAL in hourly_conf else SCAN_INTERVAL
         hourly_exclude = hourly_conf[CONF_EXCLUDE_INTERVAL] if CONF_EXCLUDE_INTERVAL in hourly_conf else None
         hourly_update = hourly_conf[CONF_UPDATE][0] if CONF_UPDATE in hourly_conf else ATTR_AUTO
@@ -227,9 +227,9 @@ def setup_platform(hass, config, add_entities, discovery_info=None):
         nowcast_field = ''
         nowcast_conf = config[CONF_MONITORED_CONDITIONS][CONF_NOWCAST]
         nowcast_timestep = nowcast_conf[CONF_TIMESTEP][0] \
-            if CONF_TIMESTEP in nowcast_conf else 5
+            if CONF_TIMESTEP in nowcast_conf else 60
         nowcast_observations = nowcast_conf[CONF_FORECAST_OBSERVATIONS][0] \
-            if CONF_FORECAST_OBSERVATIONS in nowcast_conf else SCAN_INTERVAL
+            if CONF_FORECAST_OBSERVATIONS in nowcast_conf else 5
         nowcast_interval = nowcast_conf[CONF_SCAN_INTERVAL] if CONF_SCAN_INTERVAL in nowcast_conf else SCAN_INTERVAL
         nowcast_exclude = nowcast_conf[CONF_EXCLUDE_INTERVAL] if CONF_EXCLUDE_INTERVAL in nowcast_conf else None
         nowcast_update = nowcast_conf[CONF_UPDATE][0] if CONF_UPDATE in nowcast_conf else ATTR_AUTO
@@ -392,6 +392,7 @@ class ClimacellDailySensor(ClimacellAbstractSensor):
         self._observation_time = self.__data_provider.data[self._observation][ATTR_OBSERVATION_TIME]['value']
 
     def __update_multiple_value(self, sensor_data):
+        data = None
         # _LOGGER.debug("ClimacellSensor.update %s (%s, %s) '%s'",
         #               self._condition_name, self._observation, self.__sensor_number,
         #               self._sensor_prefix_name)
