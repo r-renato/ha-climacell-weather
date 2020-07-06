@@ -30,7 +30,6 @@ To use the `climacell` custom component you must first obtain a <a href="https:/
 <dl>
   <dt>api_key</dt>
   <dd>(string)(Required)<br>Your API key.</dd>
-  <dd>Your API key.</dd>
   
   <dt>name</dt>
   <dd>(string)(Optional)</dd>
