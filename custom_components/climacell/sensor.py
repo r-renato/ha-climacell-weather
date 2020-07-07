@@ -49,7 +49,7 @@ PLATFORM_SCHEMA = PLATFORM_SCHEMA.extend(
         vol.Required(CONF_API_KEY): cv.string,
         vol.Optional(CONF_LATITUDE): cv.latitude,
         vol.Optional(CONF_LONGITUDE): cv.longitude,
-        vol.Optional(CONF_NAME, default=DEFAULT_NAME): cv.string,
+        vol.Optional(CONF_NAME, default=DEFAULT_NAME.lower()): cv.string,
         vol.Optional(CONF_UNITS): vol.In(CONF_ALLOWED_UNITS),
         vol.Required(CONF_MONITORED_CONDITIONS): vol.Schema(MONITORED_CONDITIONS_SCHEMA),
     }
@@ -64,7 +64,7 @@ def setup_platform(hass, config, add_entities, discovery_info=None):
     # realtime_interval = None
     # realtime_exclude = None
 
-    sensor_friendly_name = config.get(CONF_NAME, "")
+    sensor_friendly_name = config.get(CONF_NAME, DEFAULT_NAME.lower())
     latitude = config.get(CONF_LATITUDE, hass.config.latitude)
     longitude = config.get(CONF_LONGITUDE, hass.config.longitude)
 
@@ -227,7 +227,7 @@ def setup_platform(hass, config, add_entities, discovery_info=None):
         nowcast_field = ''
         nowcast_conf = config[CONF_MONITORED_CONDITIONS][CONF_NOWCAST]
         nowcast_timestep = nowcast_conf[CONF_TIMESTEP][0] \
-            if CONF_TIMESTEP in nowcast_conf else 60
+            if CONF_TIMESTEP in nowcast_conf else 5
         nowcast_observations = nowcast_conf[CONF_FORECAST_OBSERVATIONS][0] \
             if CONF_FORECAST_OBSERVATIONS in nowcast_conf else 5
         nowcast_interval = nowcast_conf[CONF_SCAN_INTERVAL] if CONF_SCAN_INTERVAL in nowcast_conf else SCAN_INTERVAL
