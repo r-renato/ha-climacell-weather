@@ -302,7 +302,8 @@ CLIMACELL_DATA_CONDITIONS = {
         ATTR_OUT_FIELD: "epa_aqi",
         ATTR_NAME: "EPA AQI",
         ATTR_ICON: "mdi:eye",
-        ATTR_FORECAST_VALUES: 0
+        ATTR_FORECAST_VALUES: 0,
+        ATTR_UNIT_OF_MEASUREMENT: "epa ndx"
     },
     ATTR_AIR_QUALITY_EPA_PRIM: {
         ATTR_FIELD: "epa_primary_pollutant",
