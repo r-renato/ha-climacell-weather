@@ -1,11 +1,13 @@
 """Support for climacell.co"""
 
 import logging
+import re
 from abc import abstractmethod
 
+import pytz
 import voluptuous as vol
 
-from datetime import timedelta
+from datetime import timedelta, datetime
 
 from homeassistant.components.google_assistant import CONF_API_KEY
 from homeassistant.const import (
@@ -296,16 +298,28 @@ class ClimacellAbstractSensor(Entity):
         self._unit_of_measurement = None
         self._observation_time = None
 
+    @staticmethod
+    def __to_float(value):
+        if type(value) == str:
+            if re.match(r'^-?\d+(?:\.\d+)?$', value) is None:
+                return value
+            elif re.search("^[1-9][0-9]{0,2}(?:,[0-9]{3}){0,3}$", value):
+                return int(value)
+            else:
+                return float(value)
+        else:
+            return value
+
     @property
     def name(self):
         """Return the name of the sensor."""
         if self._observation is not None:
             if self.__timestep is None:
                 return f"{self.__friendly_name} {self.__sensor_name} " \
-                       f"{self._sensor_prefix_name} {self._observation+1}{self.__sensor_suffix_name}"
+                       f"{self._sensor_prefix_name} {self._observation}{self.__sensor_suffix_name}"
             else:
                 return f"{self.__friendly_name} {self.__sensor_name} " \
-                       f"{self._sensor_prefix_name} {str(self.__timestep * (self._observation+1)).zfill(2)}" \
+                       f"{self._sensor_prefix_name} {str(self.__timestep * (self._observation)).zfill(2)}" \
                        f"{self.__sensor_suffix_name}"
         else:
             return f"{self.__friendly_name} {self.__sensor_name}"
@@ -318,18 +332,28 @@ class ClimacellAbstractSensor(Entity):
     @property
     def state(self):
         """Return the state of the sensor."""
-        return self._state
+        return self.__to_float(self._state)
 
     @property
     def device_state_attributes(self):
         """Return the state attributes."""
+        abs_datetime = self._observation_time
+        try:
+            dt = datetime.strptime(self._observation_time, "%Y-%m-%dT%H:%M:%S.%fZ")
+            utc = dt.replace(tzinfo=pytz.timezone('UTC'))
+            abs_datetime = utc.isoformat()
+        except Exception:
+            pass
+
         attrs = {
             ATTR_ATTRIBUTION: ATTRIBUTION,
-            ATTR_OBSERVATION_TIME: self._observation_time
+            ATTR_OBSERVATION_TIME: abs_datetime
         }
 
         if self._unit_of_measurement is not None:
             attrs[ATTR_UNIT_OF_MEASUREMENT] = self._unit_of_measurement
+        elif ATTR_UNIT_OF_MEASUREMENT in CLIMACELL_DATA_CONDITIONS[self._condition_name]:
+            attrs[ATTR_UNIT_OF_MEASUREMENT] = CLIMACELL_DATA_CONDITIONS[self._condition_name][ATTR_UNIT_OF_MEASUREMENT]
 
         return attrs
 
@@ -374,6 +398,8 @@ class ClimacellDailySensor(ClimacellAbstractSensor):
             self._sensor_prefix_name = ""
             data = None
 
+            self._observation_time = self.__data_provider.data[self._observation][ATTR_OBSERVATION_TIME]['value']
+
             if self.__sensor_number is None:
                 # _LOGGER.debug("ClimacellSensor.update %s (%s, %s) '%s'",
                 #               self._condition_name, self._observation, self.__sensor_number,
@@ -389,7 +415,7 @@ class ClimacellDailySensor(ClimacellAbstractSensor):
     def __update_single_value(self, sensor_data):
         self._state = sensor_data['value']
         self._unit_of_measurement = sensor_data.get('units', None)
-        self._observation_time = self.__data_provider.data[self._observation][ATTR_OBSERVATION_TIME]['value']
+        #self._observation_time = self.__data_provider.data[self._observation][ATTR_OBSERVATION_TIME]['value']
 
     def __update_multiple_value(self, sensor_data):
         data = None
@@ -412,13 +438,13 @@ class ClimacellDailySensor(ClimacellAbstractSensor):
             self._state = data.get(self._sensor_prefix_name, None).get('value', None)
             self._unit_of_measurement = data.get(self._sensor_prefix_name, None).get('units', None)
             # self._icon = SENSOR_TYPES[self.type][ATTR_ICON]
-            self._observation_time = sensor_data[self.__sensor_number].get(ATTR_OBSERVATION_TIME, None)
+            #self._observation_time = sensor_data[self.__sensor_number].get(ATTR_OBSERVATION_TIME, None)
         elif self.__sensor_number is None:
             #                _LOGGER.debug("ClimacellSensor.update [%s] - 'data'= %s - %s - %s", self._name, data, self.forecast_value, len(data))
             self._state = data.get('value', None)
             self._unit_of_measurement = data.get('units', None)
             # self._icon = SENSOR_TYPES[self.type][ATTR_ICON]
-            self._observation_time = sensor_data[self.__sensor_number].get(ATTR_OBSERVATION_TIME, None)
+            #self._observation_time = sensor_data[self.__sensor_number].get(ATTR_OBSERVATION_TIME, None)
 
 class ClimacellHourlySensor(ClimacellAbstractSensor):
     def __init__(self, data_provider, condition_name, sensor_friendly_name, observation, realtime_update):

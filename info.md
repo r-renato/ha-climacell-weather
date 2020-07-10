@@ -5,14 +5,14 @@ The `climacell` platform uses the <a href="https://www.climacell.co/weather-api/
 
 [![hacs_badge](https://img.shields.io/badge/HACS-Default-orange.svg)](https://github.com/custom-components/hacs)
 
-[![License][license-shield]](LICENSE.md)
+[![License][license-shield]](LICENSE)
 
 [![BuyMeCoffee][buymecoffeebadge]][buymecoffee]
 
 _To use this component you must obtain an API key. Visit the the <a href="https://www.climacell.co/weather-api" target="_blank">Climacell</a> site to known how to obtain one._
 
 ## **WARNING**
-Realtime, nowcast, hourly and daily are different services, so they consume 1 API call each one.
+`Realtime`, `nowcast`, `hourly` and `daily` are different services, so they consume 1 API call each one.
 
 ## Manual installation
 
@@ -27,198 +27,137 @@ To use the `climacell` custom component you must first obtain a <a href="https:/
 
 ### Sensor variables
 
-**api_key**
->(string)(Required)<br>
-
-**name**
->(string)(Optional)<br>
-
-**latitude**
->*(float)(Optional)*<br>
->Latitude coordinate to monitor weather of (required if longitude is specified).
->                      
->Default value:<br>
->coordinates from the Home Assistant configuration
-
-**longitude**
->*(float)(Optional)*<br>
->Longitude coordinate to monitor weather of (required if latitude is specified).
-> 
->Default value:<br>
->coordinates from the Home Assistant configuration
-
-**units**
->(string)(Optional)<br>
->Specify the unit system. Valid options are us, si.
->
->Default value:
->si or us, based on the temperature preference in Home Assistant.
-
-**monitored_conditions**
->*(objects)(Required)*<br>
->Conditions to display in the frontend.
->
->>**realtime**<br>
->>*(objects)(Required)*<br>
->>
->>>**conditions**<br>
->>>*(list)(Required)*<br>
->>>>See the available conditions<br>
->>>>
->>>>**scan_interval**
->>>>*(time)(Optional)*<br>
->>>>Minimum time interval between updates.
->>>>
->>>>>**days**
->>>>>*(integer)(Optional)*
->>>>>
->>>>>**hours**
->>>>>*(integer)(Optional)*
->>>>>
->>>>>**minutes**
->>>>>*(integer)(Optional)*
->>>>>
->>>>>**seconds**
->>>>>*(integer)(Optional)*
->>>>>
->>>>>**milliseconds**
->>>>>*(integer)(Optional)*
->>>>
->>>>**exclude_interval**
->>>>*(object)(Optional)*<br>
->>>>Intervals without inquiry.
->>>>>**(object list)(Required)**
->>>>>>**Hour:Minute**
->>>>>>*(string)(Required)*
->
->>**daily**<br>
->>*(objects)(Required)*<br>
->>
->>**forecast_observations**<br>
->>*(integer)(Optional)*<br>
->>Number of days for which you would like to receive forecast. The valid values are numbers starting from 1 to 7.
->>Any condition from monitored_conditions (forecast) will generate a sensor with entity_id <condition>_<day>d. 
->>
->>Default value: 5
->> 
->>>**conditions**<br>
->>>*(list)(Required)*<br>
->>>>See the available conditions<br>
->>>>
->>>>**scan_interval**
->>>>*(time)(Optional)*<br>
->>>>Minimum time interval between updates.
->>>>
->>>>>**days**
->>>>>*(integer)(Optional)*
->>>>>
->>>>>**hours**
->>>>>*(integer)(Optional)*
->>>>>
->>>>>**minutes**
->>>>>*(integer)(Optional)*
->>>>>
->>>>>**seconds**
->>>>>*(integer)(Optional)*
->>>>>
->>>>>**milliseconds**
->>>>>*(integer)(Optional)*
->>>>
->>>>**exclude_interval**
->>>>*(object)(Optional)*<br>
->>>>Intervals without inquiry.
->>>>>**(object list)(Required)**
->>>>>>**Hour:Minute**
->>>>>>*(string)(Required)*
->
->>**hourly**<br>
->>*(objects)(Required)*<br>
->>
->>**forecast_observations**<br>
->>*(integer)(Optional)*<br>
->>Number of days for which you would like to receive forecast. The valid values are numbers starting from 1 to 7.
->>Any condition from monitored_conditions (forecast) will generate a sensor with entity_id <condition>_<day>d. 
->>
->>Default value: 5
->> 
->>>**conditions**<br>
->>>*(list)(Required)*<br>
->>>>See the available conditions<br>
->>>>
->>>>**scan_interval**
->>>>*(time)(Optional)*<br>
->>>>Minimum time interval between updates.
->>>>
->>>>>**days**
->>>>>*(integer)(Optional)*
->>>>>
->>>>>**hours**
->>>>>*(integer)(Optional)*
->>>>>
->>>>>**minutes**
->>>>>*(integer)(Optional)*
->>>>>
->>>>>**seconds**
->>>>>*(integer)(Optional)*
->>>>>
->>>>>**milliseconds**
->>>>>*(integer)(Optional)*
->>>>
->>>>**exclude_interval**
->>>>*(object)(Optional)*<br>
->>>>Intervals without inquiry.
->>>>>**(object list)(Required)**
->>>>>>**Hour:Minute**
->>>>>>*(string)(Required)*
->
->>**nowcast**<br>
->>*(objects)(Required)*<br>
->>
->>**timestep**<br>
->>*(integer)(Optional)*<br>
->>Number of minutes 1/60
->>
->>Default value: 5
->> 
->>**forecast_observations**<br>
->>*(integer)(Optional)*<br>
->>Number of days for which you would like to receive forecast. The valid values are numbers starting from 1 to 7.
->>Any condition from monitored_conditions (forecast) will generate a sensor with entity_id <condition>_<day>d. 
->>
->>Default value: 5
->> 
->>>**conditions**<br>
->>>*(list)(Required)*<br>
->>>>See the available conditions<br>
->>>>
->>>>**scan_interval**
->>>>*(time)(Optional)*<br>
->>>>Minimum time interval between updates.
->>>>
->>>>>**days**
->>>>>*(integer)(Optional)*
->>>>>
->>>>>**hours**
->>>>>*(integer)(Optional)*
->>>>>
->>>>>**minutes**
->>>>>*(integer)(Optional)*
->>>>>
->>>>>**seconds**
->>>>>*(integer)(Optional)*
->>>>>
->>>>>**milliseconds**
->>>>>*(integer)(Optional)*
->>>>
->>>>**exclude_interval**
->>>>*(object)(Optional)*<br>
->>>>Intervals without inquiry.
->>>>>**(object list)(Required)**
->>>>>>**Hour:Minute**
->>>>>>*(string)(Required)*
-
+<dl>
+  <dt>api_key</dt>
+  <dd><i>(string)(Required)</i><br>Your API key.</dd>  
+  
+  <dt>name</dt>
+  <dd><i>(string)(Optional)</i><br>Additional name for the sensors. PS The name of the sensor always starts with the prefix <code>cc</code></dd>
+  <dd><i>Default value:</i><br>climacell</dd>
+  
+  <dt>latitude</dt>
+  <dd><i>(float)(Optional)</i><br>Latitude coordinate to monitor weather of (required if longitude is specified).</dd>
+  <dd><i>Default value:</i><br>coordinates from the Home Assistant configuration</dd>
+  
+  <dt>longitude</dt>
+  <dd><i>(float)(Optional)</i><br>Longitude coordinate to monitor weather of (required if latitude is specified).</dd>
+  <dd><i>Default value:</i><br>Coordinates from the Home Assistant configuration</dd>
+  
+  <dt>units</dt>
+  <dd><i>(string)(Optional)</i><br>Specify the unit system. Valid options are <code>us</code>, <code>si</code>.</dd>
+  <dd><i>Default value:</i><br><code>si</code> or <code>us</code>, based on the temperature preference in Home Assistant</dd>   
+  
+  <dt>monitored_conditions</dt>
+  <dd><i>(object list)(Required)</i><br>Conditions to display in the frontend.</dd>
+  <dd>
+    <dl>
+        <dt>realtime</dt>
+        <dd>Access hyper-local ground-data based on a hybrid of traditional weather sources and our own sensing technology comprised of millions of cell towers and IoT sensors.</dd>
+        <dd>
+            <dl>
+                <dt>conditions</dt>
+                <dd><i>(string list)(Required)</i><br>Conditions to view. These depend on the type of service, see the table below for more details.</dd>
+                <dt>scan_interval</dt>
+                <dd><i>(time)(Optional)</i><br>Minimum time interval between updates.</dd>
+                <dd><i>Default value:</i><br>5 minutes</dd>
+                <dt>exclude_interval</dt>
+                <dd><i>(array of object)(Optional)</i><br>Intervals excluded from the update to use to reduce the number of the API calls. Each interval consists of a pair of values and indicates the start and end of the update exclusion. In particular you can specify from 1 to 20 different ranges.
+                    <dl>  
+                        <dt>Example</dt>
+                        <dd>exclude_interval:</dd> 
+                        <dd>&emsp;1:&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;# range</dd>
+                        <dd>&emsp;&emsp;- "23:30"&emsp;# start</dd>
+                        <dd>&emsp;&emsp;- "06:00"&emsp;# end</dd>
+                    </dl>  
+                </dd>  
+                <dd><i>Default value:</i><br>None</dd>
+            </dl>
+        </dd>
+        <dt>daily</dt>
+        <dd>The daily API call provides a global daily forecast with summaries up to 15 days out. Daily results are returned and calculated based on 6am to 6am UTC periods (meteorological timeframe).</dd>
+        <dd>
+            <dl>
+                <dt>forecast_observations</dt>
+                <dd><i>(integer)(Optional)</i><br>Number of days for which you would like to receive forecast. The valid values are numbers starting from 1 to 15. Any condition from <code>monitored_conditions</code> (forecast) will generate a sensor with entity_id <code>&lt;condition&gt;_&lt;day&gt;d</code>, where 'today' is <code>0d</code>.</dd>
+                <dd><i>Default value:</i><br>5</dd>
+                <dt>conditions</dt>
+                <dd><i>(string list)(Required)</i><br>Conditions to view. These depend on the type of service, see the table below for more details.</dd>
+                <dt>scan_interval</dt>
+                <dd><i>(time)(Optional)</i><br>Minimum time interval between updates.</dd>
+                <dd><i>Default value:</i><br>5 minutes</dd>
+                <dt>exclude_interval</dt>
+                <dd><i>(array of object)(Optional)</i><br>Intervals excluded from the update to use to reduce the number of the API calls. Each interval consists of a pair of values and indicates the start and end of the update exclusion. In particular you can specify from 1 to 20 different ranges.
+                    <dl>  
+                        <dt>Example</dt>
+                        <dd>exclude_interval:</dd> 
+                        <dd>&emsp;1:&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;# range</dd>
+                        <dd>&emsp;&emsp;- "23:30"&emsp;# start</dd>
+                        <dd>&emsp;&emsp;- "06:00"&emsp;# end</dd>
+                    </dl>  
+                </dd>  
+                <dd><i>Default value:</i><br>None</dd>
+            </dl>
+        </dd>        
+        <dt>hourly</dt>
+        <dd>The hourly call provides a global hourly forecast, up to 96 hours (4 days) out, for any location.</dd>
+        <dd>
+            <dl>
+                <dt>forecast_observations</dt>
+                <dd><i>(integer)(Optional)</i><br>Number of hours for which you would like to receive forecast. The valid values are numbers starting from 1 to 96. Any condition from <code>monitored_conditions</code> (forecast) will generate a sensor with entity_id <code>&lt;condition&gt;_&lt;hour&gt;h</code>, where <code>0h</code> if the first forecast hour.</dd>
+                <dd><i>Default value:</i><br>5</dd>
+                <dt>conditions</dt>
+                <dd><i>(string list)(Required)</i><br>Conditions to view. These depend on the type of service, see the table below for more details.</dd>
+                <dt>scan_interval</dt>
+                <dd><i>(time)(Optional)</i><br>Minimum time interval between updates.</dd>
+                <dd><i>Default value:</i><br>5 minutes</dd>
+                <dt>exclude_interval</dt>
+                <dd><i>(array of object)(Optional)</i><br>Intervals excluded from the update to use to reduce the number of the API calls. Each interval consists of a pair of values and indicates the start and end of the update exclusion. In particular you can specify from 1 to 20 different ranges.
+                    <dl>  
+                        <dt>Example</dt>
+                        <dd>exclude_interval:</dd> 
+                        <dd>&emsp;1:&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;# range</dd>
+                        <dd>&emsp;&emsp;- "23:30"&emsp;# start</dd>
+                        <dd>&emsp;&emsp;- "06:00"&emsp;# end</dd>
+                    </dl>  
+                </dd>  
+                <dd><i>Default value:</i><br>None</dd>
+             </dl>
+        </dd>
+        <dt>nowcast</dt>
+        <dd>“Nowcasting” is the art and science of making precision forecasts with very short lead-times, on the order of minutes to a few hours. In contrast with traditional forecasts, a nowcast provides near-term actionable information to consumers: when/where precipitation will start and end, when lightning or other hazards may impact an area, or similar. A typical nowcast has higher spatial resolution ( <2 km ) and time resolution ( <1 hour ).</dd>
+        <dd>
+            <dl>
+                <dt>timestep</dt>
+                <dd><i>(integer)(Optional)</i><br>Number of minutes from 5 to 60</dd>
+                <dd><i>Default value:</i><br>5</dd>
+                <dt>forecast_observations</dt>
+                <dd><i>(integer)(Optional)</i><br>Number of <code>timestep</code> for which you would like to receive forecast up to a maximum of 360 minute. Valid values respect the condition: <code>timestep * forecast_observations <= 360</code>. Any condition from <code>monitored_conditions</code> (forecast) will generate a sensor with entity_id <code>&lt;condition&gt;_&lt;minute&gt;m</code>.</dd>
+                <dd><i>Default value:</i><br>5</dd>
+                <dt>conditions</dt>
+                <dd><i>(string list)(Required)</i><br>Conditions to view. These depend on the type of service, see the table below for more details.</dd>
+                <dt>scan_interval</dt>
+                <dd><i>(time)(Optional)</i><br>Minimum time interval between updates.</dd>
+                <dd><i>Default value:</i><br>5 minutes</dd>
+                <dt>exclude_interval</dt>
+                <dd><i>(array of object)(Optional)</i><br>Intervals excluded from the update to use to reduce the number of the API calls. Each interval consists of a pair of values and indicates the start and end of the update exclusion. In particular you can specify from 1 to 20 different ranges.
+                    <dl>  
+                        <dt>Example</dt>
+                        <dd>exclude_interval:</dd> 
+                        <dd>&emsp;1:&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;# range</dd>
+                        <dd>&emsp;&emsp;- "23:30"&emsp;# start</dd>
+                        <dd>&emsp;&emsp;- "06:00"&emsp;# end</dd>
+                    </dl>  
+                </dd>  
+                <dd><i>Default value:</i><br>None</dd>
+            </dl>
+        </dd>
+    </dl>
+  </dd>   
+</dl>
 
 ### Condition information
+
+The table shows a summary of the services of the data provider. Detailed information can be found here: <a href="https://developer.climacell.co/v3/docs/why-climacell" target="_blank">https://developer.climacell.co/v3/docs/why-climacell</a>
 
 |        **Condition**        |           **Services**           |             **Description**         |
 |-----------------------------|----------------------------------|-------------------------------------|
@@ -522,7 +461,7 @@ An example of data provided by a `climacell` sensor is the following:
 
 | **Sensor name** | **State** | **Sensor attributes** | **Value**                |
 |-----------------|-----------|-----------------------|--------------------------|
-| temperature     | 13        | attribution           | Powered by Climacell     |
+| cc_temperature  | 13.2      | attribution           | Powered by Climacell     |
 |                 |           | unit_of_measurement   | C                        |
 |                 |           | observation_time      | 2020-04-30T02:40:47.390Z |
 |                 |           | friendly_name         | Temperature              |

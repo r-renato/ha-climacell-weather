@@ -4,12 +4,21 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
 
-## [1.3.3] Unreleased
+## [1.3.4] Unreleased
 ### Fixed
 
 ### Added
 
 ### Changed
+
+## [1.3.3] 2020-07-10
+### Fixed
+- Minor bug fix
+- Fixed observation time attribute. Now show UTC time with timezone
+- Fixed observation forecast count. Now start from 0 instead of 1
+
+### Changed
+- Documentation improvement
 
 ## [1.3.2] 2020-07-06
 ### Fixed

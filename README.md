@@ -5,14 +5,14 @@ The `climacell` platform uses the <a href="https://www.climacell.co/weather-api/
 
 [![hacs_badge](https://img.shields.io/badge/HACS-Default-orange.svg)](https://github.com/custom-components/hacs)
 
-[![License][license-shield]](LICENSE.md)
+[![License][license-shield]](LICENSE)
 
 [![BuyMeCoffee][buymecoffeebadge]][buymecoffee]
 
 _To use this component you must obtain an API key. Visit the the <a href="https://www.climacell.co/weather-api" target="_blank">Climacell</a> site to known how to obtain one._
 
 ## **WARNING**
-Realtime, nowcast, hourly and daily are different services, so they consume 1 API call each one.
+`Realtime`, `nowcast`, `hourly` and `daily` are different services, so they consume 1 API call each one.
 
 ## Manual installation
 
@@ -32,7 +32,7 @@ To use the `climacell` custom component you must first obtain a <a href="https:/
   <dd><i>(string)(Required)</i><br>Your API key.</dd>  
   
   <dt>name</dt>
-  <dd><i>(string)(Optional)</i><br>Additional name for the sensors. PS The name of the sensor always starts with the prefix `cc`</dd>
+  <dd><i>(string)(Optional)</i><br>Additional name for the sensors. PS The name of the sensor always starts with the prefix <code>cc</code></dd>
   <dd><i>Default value:</i><br>climacell</dd>
   
   <dt>latitude</dt>
@@ -44,8 +44,8 @@ To use the `climacell` custom component you must first obtain a <a href="https:/
   <dd><i>Default value:</i><br>Coordinates from the Home Assistant configuration</dd>
   
   <dt>units</dt>
-  <dd><i>(string)(Optional)</i><br>Specify the unit system. Valid options are us, si.</dd>
-  <dd><i>Default value:</i><br>si or us, based on the temperature preference in Home Assistant</dd>   
+  <dd><i>(string)(Optional)</i><br>Specify the unit system. Valid options are <code>us</code>, <code>si</code>.</dd>
+  <dd><i>Default value:</i><br><code>si</code> or <code>us</code>, based on the temperature preference in Home Assistant</dd>   
   
   <dt>monitored_conditions</dt>
   <dd><i>(object list)(Required)</i><br>Conditions to display in the frontend.</dd>
@@ -61,7 +61,16 @@ To use the `climacell` custom component you must first obtain a <a href="https:/
                 <dd><i>(time)(Optional)</i><br>Minimum time interval between updates.</dd>
                 <dd><i>Default value:</i><br>5 minutes</dd>
                 <dt>exclude_interval</dt>
-                <dd><i>(array of object)(Optional)</i><br>Intervals without inquiry.</dd>
+                <dd><i>(array of object)(Optional)</i><br>Intervals excluded from the update to use to reduce the number of the API calls. Each interval consists of a pair of values and indicates the start and end of the update exclusion. In particular you can specify from 1 to 20 different ranges.
+                    <dl>  
+                        <dt>Example</dt>
+                        <dd>exclude_interval:</dd> 
+                        <dd>&emsp;1:&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;# range</dd>
+                        <dd>&emsp;&emsp;- "23:30"&emsp;# start</dd>
+                        <dd>&emsp;&emsp;- "06:00"&emsp;# end</dd>
+                    </dl>  
+                </dd>  
+                <dd><i>Default value:</i><br>None</dd>
             </dl>
         </dd>
         <dt>daily</dt>
@@ -69,7 +78,7 @@ To use the `climacell` custom component you must first obtain a <a href="https:/
         <dd>
             <dl>
                 <dt>forecast_observations</dt>
-                <dd><i>(integer)(Optional)</i><br>Number of days for which you would like to receive forecast. The valid values are numbers starting from 1 to 15. Any condition from monitored_conditions (forecast) will generate a sensor with entity_id &lt;condition&gt;_&lt;day&gt;d.</dd>
+                <dd><i>(integer)(Optional)</i><br>Number of days for which you would like to receive forecast. The valid values are numbers starting from 1 to 15. Any condition from <code>monitored_conditions</code> (forecast) will generate a sensor with entity_id <code>&lt;condition&gt;_&lt;day&gt;d</code>, where 'today' is <code>0d</code>.</dd>
                 <dd><i>Default value:</i><br>5</dd>
                 <dt>conditions</dt>
                 <dd><i>(string list)(Required)</i><br>Conditions to view. These depend on the type of service, see the table below for more details.</dd>
@@ -77,7 +86,16 @@ To use the `climacell` custom component you must first obtain a <a href="https:/
                 <dd><i>(time)(Optional)</i><br>Minimum time interval between updates.</dd>
                 <dd><i>Default value:</i><br>5 minutes</dd>
                 <dt>exclude_interval</dt>
-                <dd><i>(array of object)(Optional)</i><br>Intervals without inquiry.</dd>
+                <dd><i>(array of object)(Optional)</i><br>Intervals excluded from the update to use to reduce the number of the API calls. Each interval consists of a pair of values and indicates the start and end of the update exclusion. In particular you can specify from 1 to 20 different ranges.
+                    <dl>  
+                        <dt>Example</dt>
+                        <dd>exclude_interval:</dd> 
+                        <dd>&emsp;1:&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;# range</dd>
+                        <dd>&emsp;&emsp;- "23:30"&emsp;# start</dd>
+                        <dd>&emsp;&emsp;- "06:00"&emsp;# end</dd>
+                    </dl>  
+                </dd>  
+                <dd><i>Default value:</i><br>None</dd>
             </dl>
         </dd>        
         <dt>hourly</dt>
@@ -85,7 +103,7 @@ To use the `climacell` custom component you must first obtain a <a href="https:/
         <dd>
             <dl>
                 <dt>forecast_observations</dt>
-                <dd><i>(integer)(Optional)</i><br>Number of days for which you would like to receive forecast. The valid values are numbers starting from 1 to 96. Any condition from monitored_conditions (forecast) will generate a sensor with entity_id &lt;condition&gt;_&lt;day&gt;d.</dd>
+                <dd><i>(integer)(Optional)</i><br>Number of hours for which you would like to receive forecast. The valid values are numbers starting from 1 to 96. Any condition from <code>monitored_conditions</code> (forecast) will generate a sensor with entity_id <code>&lt;condition&gt;_&lt;hour&gt;h</code>, where <code>0h</code> if the first forecast hour.</dd>
                 <dd><i>Default value:</i><br>5</dd>
                 <dt>conditions</dt>
                 <dd><i>(string list)(Required)</i><br>Conditions to view. These depend on the type of service, see the table below for more details.</dd>
@@ -93,7 +111,16 @@ To use the `climacell` custom component you must first obtain a <a href="https:/
                 <dd><i>(time)(Optional)</i><br>Minimum time interval between updates.</dd>
                 <dd><i>Default value:</i><br>5 minutes</dd>
                 <dt>exclude_interval</dt>
-                <dd><i>(array of object)(Optional)</i><br>Intervals without inquiry.</dd>
+                <dd><i>(array of object)(Optional)</i><br>Intervals excluded from the update to use to reduce the number of the API calls. Each interval consists of a pair of values and indicates the start and end of the update exclusion. In particular you can specify from 1 to 20 different ranges.
+                    <dl>  
+                        <dt>Example</dt>
+                        <dd>exclude_interval:</dd> 
+                        <dd>&emsp;1:&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;# range</dd>
+                        <dd>&emsp;&emsp;- "23:30"&emsp;# start</dd>
+                        <dd>&emsp;&emsp;- "06:00"&emsp;# end</dd>
+                    </dl>  
+                </dd>  
+                <dd><i>Default value:</i><br>None</dd>
              </dl>
         </dd>
         <dt>nowcast</dt>
@@ -101,10 +128,10 @@ To use the `climacell` custom component you must first obtain a <a href="https:/
         <dd>
             <dl>
                 <dt>timestep</dt>
-                <dd><i>(integer)(Optional)</i><br>Number of minutes 5/60</dd>
+                <dd><i>(integer)(Optional)</i><br>Number of minutes from 5 to 60</dd>
                 <dd><i>Default value:</i><br>5</dd>
                 <dt>forecast_observations</dt>
-                <dd><i>(integer)(Optional)</i><br>Number of days for which you would like to receive forecast. The valid values are numbers starting from 1 to 96. Any condition from monitored_conditions (forecast) will generate a sensor with entity_id &lt;condition&gt;_&lt;day&gt;d.</dd>
+                <dd><i>(integer)(Optional)</i><br>Number of <code>timestep</code> for which you would like to receive forecast up to a maximum of 360 minute. Valid values respect the condition: <code>timestep * forecast_observations <= 360</code>. Any condition from <code>monitored_conditions</code> (forecast) will generate a sensor with entity_id <code>&lt;condition&gt;_&lt;minute&gt;m</code>.</dd>
                 <dd><i>Default value:</i><br>5</dd>
                 <dt>conditions</dt>
                 <dd><i>(string list)(Required)</i><br>Conditions to view. These depend on the type of service, see the table below for more details.</dd>
@@ -112,7 +139,16 @@ To use the `climacell` custom component you must first obtain a <a href="https:/
                 <dd><i>(time)(Optional)</i><br>Minimum time interval between updates.</dd>
                 <dd><i>Default value:</i><br>5 minutes</dd>
                 <dt>exclude_interval</dt>
-                <dd><i>(array of object)(Optional)</i><br>Intervals without inquiry.</dd>
+                <dd><i>(array of object)(Optional)</i><br>Intervals excluded from the update to use to reduce the number of the API calls. Each interval consists of a pair of values and indicates the start and end of the update exclusion. In particular you can specify from 1 to 20 different ranges.
+                    <dl>  
+                        <dt>Example</dt>
+                        <dd>exclude_interval:</dd> 
+                        <dd>&emsp;1:&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;# range</dd>
+                        <dd>&emsp;&emsp;- "23:30"&emsp;# start</dd>
+                        <dd>&emsp;&emsp;- "06:00"&emsp;# end</dd>
+                    </dl>  
+                </dd>  
+                <dd><i>Default value:</i><br>None</dd>
             </dl>
         </dd>
     </dl>
@@ -120,6 +156,8 @@ To use the `climacell` custom component you must first obtain a <a href="https:/
 </dl>
 
 ### Condition information
+
+The table shows a summary of the services of the data provider. Detailed information can be found here: <a href="https://developer.climacell.co/v3/docs/why-climacell" target="_blank">https://developer.climacell.co/v3/docs/why-climacell</a>
 
 |        **Condition**        |           **Services**           |             **Description**         |
 |-----------------------------|----------------------------------|-------------------------------------|
@@ -423,7 +461,7 @@ An example of data provided by a `climacell` sensor is the following:
 
 | **Sensor name** | **State** | **Sensor attributes** | **Value**                |
 |-----------------|-----------|-----------------------|--------------------------|
-| temperature     | 13        | attribution           | Powered by Climacell     |
+| cc_temperature  | 13.2      | attribution           | Powered by Climacell     |
 |                 |           | unit_of_measurement   | C                        |
 |                 |           | observation_time      | 2020-04-30T02:40:47.390Z |
 |                 |           | friendly_name         | Temperature              |
