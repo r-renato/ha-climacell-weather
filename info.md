@@ -1,7 +1,7 @@
-# Climacell weather service provider integration
+# ClimaCell weather service provider integration
 ### ... is a custom component (sensor) for Home Assistant.<br>
 
-The `climacell` platform uses the <a href="https://www.climacell.co/weather-api/docs/" target="_blank">Climacell API</a> as a source for meteorological data for your location.
+The `ClimaCell` platform uses the <a href="https://www.climacell.co/weather-api/docs/" target="_blank">ClimaCell API</a> as a source for meteorological data for your location.
 
 [![hacs_badge](https://img.shields.io/badge/HACS-Default-orange.svg)](https://github.com/custom-components/hacs)
 
@@ -9,10 +9,10 @@ The `climacell` platform uses the <a href="https://www.climacell.co/weather-api/
 
 [![BuyMeCoffee][buymecoffeebadge]][buymecoffee]
 
-_To use this component you must obtain an API key. Visit the the <a href="https://www.climacell.co/weather-api" target="_blank">Climacell</a> site to known how to obtain one._
+_To use this component you must obtain an API key. Visit the <a href="https://www.climacell.co/weather-api" target="_blank">ClimaCell</a> site to learn how to obtain one._
 
 ## **WARNING**
-`Realtime`, `nowcast`, `hourly` and `daily` are different services, so they consume 1 API call each one.
+`Realtime`, `nowcast`, `hourly` and `daily` are different services, so they consume one API call each.
 
 ## Manual installation
 
@@ -23,7 +23,7 @@ _To use this component you must obtain an API key. Visit the the <a href="https:
 5. Place the content of the `custom_components/climacell/` directory (folder) in the new directory (folder) you created.
 
 ## Configuration
-To use the `climacell` custom component you must first obtain a <a href="https://www.climacell.co/weather-api/pricing/">API key</a>. 
+To use the `ClimaCell` custom component you must first obtain an <a href="https://www.climacell.co/weather-api/pricing/">API key</a>. 
 
 ### Sensor variables
 
