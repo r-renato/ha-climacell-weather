@@ -1,5 +1,5 @@
 {
-  "name": "Climacell weather provider",
+  "name": "ClimaCell Weather Provider",
   "domains": ["sensor"],
   "iot_class": ["Cloud Polling"]
 }
