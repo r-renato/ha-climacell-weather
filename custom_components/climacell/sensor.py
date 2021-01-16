@@ -83,7 +83,7 @@ PLATFORM_SCHEMA = PLATFORM_SCHEMA.extend(
         vol.Optional(CONF_LONGITUDE): cv.longitude,
         vol.Optional(CONF_NAME, default=DEFAULT_NAME.lower()): cv.string,
         vol.Optional(CONF_UNITS): vol.In(CONF_ALLOWED_UNITS + CONF_LEGACY_UNITS),
-        vol.Required(CONF_MONITORED_CONDITIONS): vol.Schema(
+        vol.Optional(CONF_MONITORED_CONDITIONS): vol.Schema(
             MONITORED_CONDITIONS_SCHEMA
         ),
         vol.Optional(CONF_TIMELINES, default=[]): vol.All(
