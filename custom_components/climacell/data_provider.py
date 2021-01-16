@@ -37,8 +37,39 @@ class ClimacellTimelineDataProvider:
         self.__fields = ','.join(fields)
         self.__observations = observations
         self.__start_time = start_time
-        self.__timesteps = timesteps
         self.__units = units
+ 
+        self.__timesteps_suffix = timesteps[-1]
+        self.__timesteps_int = int(timesteps[:-1])
+        self.__take_every = 1
+
+        if self.__timesteps_suffix == 'm':
+            if self.__timesteps_int % 60 == 0:
+                self.__timesteps_suffix = 'h'
+                self.__timesteps_int = 1
+                self.__take_every = int(self.__timesteps_int / 60)
+            elif self.__timesteps_int % 30 == 0:
+                self.__take_every = int(self.__timesteps_int / 30)
+                self.__timesteps_int = 30
+            elif self.__timesteps_int % 5 == 0:
+                self.__take_every = int(self.__timesteps_int / 5)
+                self.__timesteps_int = 5
+            else:
+                self.__take_every = self.__timesteps_int 
+                self.__timesteps_int = 1
+        
+        if self.__timesteps_suffix == 'h':
+            if self.__timesteps_int % 24 == 0:
+                self.__timesteps_suffix = 'd'
+                self.__timesteps_int = 1
+                self.__take_every = int(self.__timesteps_int / 24)
+            else:
+                self.__take_every = self.__timesteps_int 
+                self.__timesteps_int = 1
+
+        if self.__timesteps_suffix == 'd':
+            self.__take_every = self.__timesteps_int 
+            self.__timesteps_int = 1
 
         """Initialize the data object."""
         self.data = None
@@ -48,7 +79,7 @@ class ClimacellTimelineDataProvider:
             'apikey': api_key,
         }
         
-        self._params = 'location=' + str(latitude) + ',' + str(longitude)  + '&units=' + self.__units + '&timesteps=' + self.__timesteps
+        self._params = 'location=' + str(latitude) + ',' + str(longitude)  + '&units=' + self.__units + '&timesteps=' + str(self.__timesteps_int)+self.__timesteps_suffix
 
         _LOGGER.debug("ClimacellTimelineDataProvider initializated for: %s.", self.__fields)
 
@@ -124,22 +155,20 @@ class ClimacellTimelineDataProvider:
               else:
                 start_time_obj+=delta
 
-            start_time_obj = start_time_obj.replace(microsecond=0,second=0,tzinfo=None)
+            start_time_obj = start_time_obj.replace(microsecond=0,tzinfo=None)
             querystring += '&startTime=' + start_time_obj.isoformat() + 'Z'
             if self.__observations is not None:
-                timestep_suffix = self.__timesteps[-1]
-                timestep_int = int(self.__timesteps[:-1])
-                if timestep_suffix == 'm':
-                    end_time = start_time_obj + timedelta(minutes=timestep_int*self.__observations)
-                elif timestep_suffix == 'h':
-                    end_time = start_time_obj + timedelta(hours=timestep_int*self.__observations)
-                elif timestep_suffix == 'd':
-                    end_time = start_time_obj + timedelta(days=timestep_int*self.__observations)
+                time_delta=self.__timesteps_int*(self.__observations*self.__take_every)
+                if self.__timesteps_suffix == 'm':
+                    end_time = start_time_obj + timedelta(minutes=time_delta)
+                elif self.__timesteps_suffix == 'h':
+                    end_time = start_time_obj + timedelta(hours=time_delta)
+                elif self.__timesteps_suffix == 'd':
+                    end_time = start_time_obj + timedelta(days=time_delta)
                 
                 querystring += '&endTime=' + end_time.isoformat() + 'Z'
               
             url = _ENDPOINT + '/timelines'
-            _LOGGER.debug("ClimacellTimelineDataProvider:_user_update url: %s\%s.", url, querystring)
             self.data = self.__retrieve_data(url, self.__headers, querystring)
 
         return True
@@ -148,7 +177,7 @@ class ClimacellTimelineDataProvider:
         result = self.data
 
         try:
-            _LOGGER.debug("_retrieve_data url: %s - headers: %s - querystring: %s",
+            _LOGGER.debug("ClimacellTimelineDataProvider:_retrieve_data url: %s - headers: %s - querystring: %s",
                           url, self.__headers, querystring)
 
             response = requests.request("GET", url,
@@ -159,6 +188,7 @@ class ClimacellTimelineDataProvider:
             if response.status_code == 200:
                 result = json.loads(response.text)
                 result = result['data']['timelines'][0]
+                result['intervals']=result['intervals'][::self.__take_every]
             else:
                 _LOGGER.error("ClimacellTimelineDataProvider._retrieve_data error status_code %s", response.status_code)
 

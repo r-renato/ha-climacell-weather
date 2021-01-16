@@ -117,13 +117,6 @@ def setup_platform(hass, config, add_entities, discovery_info=None):
           leg_update = leg_conf[CONF_UPDATE][0] if CONF_UPDATE in leg_conf else ATTR_AUTO
           leg_timestep = str(leg_conf[CONF_TIMESTEP][0])+'m' if CONF_TIMESTEP in leg_conf else LEGACY_CONF_TIMESTEPS[key]
 
-          if leg_timestep == '60m':
-            leg_timestep = '1h'
-
-          if leg_timestep not in TIMESTEP_VALUES:
-              _LOGGER.error("API Version 4 does not support timestep %s. Using default %s instead.", leg_timestep, LEGACY_CONF_TIMESTEPS[key])
-              leg_timestep = LEGACY_CONF_TIMESTEPS[key]
-
           config[CONF_TIMELINES] = config[CONF_TIMELINES] + [{
             CONF_NAME: key,
             CONF_FIELDS: leg_conf[CONF_CONDITIONS],
@@ -141,7 +134,7 @@ def setup_platform(hass, config, add_entities, discovery_info=None):
       interval = timeline_spec[CONF_SCAN_INTERVAL] if CONF_SCAN_INTERVAL in timeline_spec else DEFAULT_SCAN_INTERVAL
       fields =  timeline_spec[CONF_FIELDS] if CONF_FIELDS in timeline_spec else []
       start_time = timeline_spec[CONF_START_TIME] if CONF_START_TIME in timeline_spec else "now"
-      observations = timeline_spec[CONF_FORECAST_OBSERVATIONS] if CONF_FORECAST_OBSERVATIONS in timeline_spec else None
+      observations = int(timeline_spec[CONF_FORECAST_OBSERVATIONS]) if CONF_FORECAST_OBSERVATIONS in timeline_spec else None
       timestep = timeline_spec[CONF_TIMESTEP] if CONF_TIMESTEP in timeline_spec else "1d"
       exclude = timeline_spec[CONF_EXCLUDE_INTERVAL]  if CONF_EXCLUDE_INTERVAL in timeline_spec else None
       name = timeline_spec[CONF_NAME] if CONF_NAME in timeline_spec else DEFAULT_TIMELINE_NAME
@@ -292,6 +285,10 @@ class ClimacellTimelineSensor(Entity):
             self.__data_provider.retrieve_update()
 
         if self.__data_provider.data is not None:
+            if self._observation >= len(self.__data_provider.data['intervals']):
+                _LOGGER.error('observation %s missing: %s',self._observation,self.__data_provider.data)
+                return
+
             sensor_data = self.__data_provider.data['intervals'][self._observation]
             self._state = sensor_data['values'][self.__field]
             if self.__valuemap is not None:
