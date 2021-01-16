@@ -10,21 +10,37 @@ from datetime import timedelta, datetime
 
 from homeassistant.components.google_assistant import CONF_API_KEY
 from homeassistant.const import (
-    CONF_LATITUDE, CONF_LONGITUDE,
+    CONF_LATITUDE,
+    CONF_LONGITUDE,
     CONF_NAME,
     CONF_SCAN_INTERVAL,
     CONF_MONITORED_CONDITIONS,
-    ATTR_ICON, ATTR_ATTRIBUTION, ATTR_UNIT_OF_MEASUREMENT, ATTR_NAME)
+    ATTR_ICON,
+    ATTR_ATTRIBUTION,
+    ATTR_UNIT_OF_MEASUREMENT,
+    ATTR_NAME,
+)
 from homeassistant.helpers import config_validation as cv
 from homeassistant.components.sensor import PLATFORM_SCHEMA
 from homeassistant.helpers.entity import Entity
 
-from custom_components.climacell.daily_api_const import CONF_DAILY, SCHEMA_DAILY_CONDITIONS
+from custom_components.climacell.daily_api_const import (
+    CONF_DAILY,
+    SCHEMA_DAILY_CONDITIONS,
+)
 from custom_components.climacell.global_const import *
-from custom_components.climacell.hourly_api_const import CONF_HOURLY, SCHEMA_HOURLY_CONDITIONS
-from custom_components.climacell.nowcast_api_const import SCHEMA_NOWCAST_CONDITIONS, CONF_NOWCAST
-from custom_components.climacell.realtime_api_const import CONF_REALTIME, \
-    SCHEMA_REALTIME_CONDITIONS
+from custom_components.climacell.hourly_api_const import (
+    CONF_HOURLY,
+    SCHEMA_HOURLY_CONDITIONS,
+)
+from custom_components.climacell.nowcast_api_const import (
+    SCHEMA_NOWCAST_CONDITIONS,
+    CONF_NOWCAST,
+)
+from custom_components.climacell.realtime_api_const import (
+    CONF_REALTIME,
+    SCHEMA_REALTIME_CONDITIONS,
+)
 from . import DOMAIN, ClimacellTimelineDataProvider
 
 _LOGGER = logging.getLogger(__name__)
@@ -46,10 +62,14 @@ MONITORED_CONDITIONS_SCHEMA = vol.Schema(
 SCHEMA_TIMELINE = vol.Schema(
     {
         vol.Optional(CONF_NAME, default=DEFAULT_TIMELINE_NAME): cv.string,
-        vol.Required(CONF_FIELDS): vol.All(cv.ensure_list, [vol.In(CLIMACELL_DATA_CONDITIONS.keys())]),
+        vol.Required(CONF_FIELDS): vol.All(
+            cv.ensure_list, [vol.In(CLIMACELL_DATA_CONDITIONS.keys())]
+        ),
         vol.Optional(CONF_FORECAST_OBSERVATIONS): cv.positive_int,
         vol.Optional(CONF_UPDATE): vol.All(cv.ensure_list, [vol.In(UPDATE_MODES)]),
-        vol.Optional(CONF_EXCLUDE_INTERVAL): vol.All(cv.ensure_list, [vol.Schema(SCHEMA_EXCLUDE_INTERVAL)]),
+        vol.Optional(CONF_EXCLUDE_INTERVAL): vol.All(
+            cv.ensure_list, [vol.Schema(SCHEMA_EXCLUDE_INTERVAL)]
+        ),
         vol.Optional(CONF_SCAN_INTERVAL): cv.time_period,
         vol.Optional(CONF_TIMESTEP, default="1d"): vol.In(TIMESTEP_VALUES),
         vol.Optional(CONF_START_TIME, default="now"): cv.string,
@@ -62,15 +82,22 @@ PLATFORM_SCHEMA = PLATFORM_SCHEMA.extend(
         vol.Optional(CONF_LATITUDE): cv.latitude,
         vol.Optional(CONF_LONGITUDE): cv.longitude,
         vol.Optional(CONF_NAME, default=DEFAULT_NAME.lower()): cv.string,
-        vol.Optional(CONF_UNITS): vol.In(CONF_ALLOWED_UNITS+CONF_LEGACY_UNITS),
-        vol.Required(CONF_MONITORED_CONDITIONS): vol.Schema(MONITORED_CONDITIONS_SCHEMA),
-        vol.Optional(CONF_TIMELINES, default=[]): vol.All(cv.ensure_list, [vol.Schema(SCHEMA_TIMELINE)]),
+        vol.Optional(CONF_UNITS): vol.In(CONF_ALLOWED_UNITS + CONF_LEGACY_UNITS),
+        vol.Required(CONF_MONITORED_CONDITIONS): vol.Schema(
+            MONITORED_CONDITIONS_SCHEMA
+        ),
+        vol.Optional(CONF_TIMELINES, default=[]): vol.All(
+            cv.ensure_list, [vol.Schema(SCHEMA_TIMELINE)]
+        ),
     }
 )
 
+
 def setup_platform(hass, config, add_entities, discovery_info=None):
     """Set up the Climacell sensor."""
-    _LOGGER.info("__init__ setup_platform 'sensor' start for %s with config %s.", DOMAIN, config)
+    _LOGGER.info(
+        "__init__ setup_platform 'sensor' start for %s with config %s.", DOMAIN, config
+    )
 
     # realtime_conf = None
     # realtime_interval = None
@@ -96,136 +123,198 @@ def setup_platform(hass, config, add_entities, discovery_info=None):
         units = CONF_ALLOWED_UNITS[1]
 
     LEGACY_CONF_TIMESTEPS = {
-      CONF_REALTIME: "1m",
-      CONF_DAILY: "1d",
-      CONF_HOURLY: "1h",
-      CONF_NOWCAST: "5m",
+        CONF_REALTIME: "1m",
+        CONF_DAILY: "1d",
+        CONF_HOURLY: "1h",
+        CONF_NOWCAST: "5m",
     }
 
     if CONF_TIMELINES not in config:
-        config[CONF_TIMELINES] = [] 
+        config[CONF_TIMELINES] = []
 
     for key in LEGACY_CONF_TIMESTEPS:
         if key in config[CONF_MONITORED_CONDITIONS]:
-          leg_conf=config[CONF_MONITORED_CONDITIONS][key]
+            leg_conf = config[CONF_MONITORED_CONDITIONS][key]
 
-          default_observations = 1 if key == CONF_REALTIME else 5
+            default_observations = 1 if key == CONF_REALTIME else 5
 
-          leg_observations = leg_conf[CONF_FORECAST_OBSERVATIONS][0] if CONF_FORECAST_OBSERVATIONS in leg_conf else default_observations
-          leg_interval = leg_conf[CONF_SCAN_INTERVAL] if CONF_SCAN_INTERVAL in leg_conf else DEFAULT_SCAN_INTERVAL
-          leg_exclude = leg_conf[CONF_EXCLUDE_INTERVAL] if CONF_EXCLUDE_INTERVAL in leg_conf else None
-          leg_update = leg_conf[CONF_UPDATE][0] if CONF_UPDATE in leg_conf else ATTR_AUTO
-          leg_timestep = str(leg_conf[CONF_TIMESTEP][0])+'m' if CONF_TIMESTEP in leg_conf else LEGACY_CONF_TIMESTEPS[key]
+            leg_observations = (
+                leg_conf[CONF_FORECAST_OBSERVATIONS][0]
+                if CONF_FORECAST_OBSERVATIONS in leg_conf
+                else default_observations
+            )
+            leg_interval = (
+                leg_conf[CONF_SCAN_INTERVAL]
+                if CONF_SCAN_INTERVAL in leg_conf
+                else DEFAULT_SCAN_INTERVAL
+            )
+            leg_exclude = (
+                leg_conf[CONF_EXCLUDE_INTERVAL]
+                if CONF_EXCLUDE_INTERVAL in leg_conf
+                else None
+            )
+            leg_update = (
+                leg_conf[CONF_UPDATE][0] if CONF_UPDATE in leg_conf else ATTR_AUTO
+            )
+            leg_timestep = (
+                str(leg_conf[CONF_TIMESTEP][0]) + "m"
+                if CONF_TIMESTEP in leg_conf
+                else LEGACY_CONF_TIMESTEPS[key]
+            )
 
-          config[CONF_TIMELINES] = config[CONF_TIMELINES] + [{
-            CONF_NAME: key,
-            CONF_FIELDS: leg_conf[CONF_CONDITIONS],
-            CONF_FORECAST_OBSERVATIONS: leg_observations,
-            CONF_UPDATE: leg_update,
-            CONF_EXCLUDE_INTERVAL: leg_exclude,
-            CONF_SCAN_INTERVAL: leg_interval,
-            CONF_TIMESTEP: leg_timestep,
-            CONF_START_TIME: "now",
-          }]
+            config[CONF_TIMELINES] = config[CONF_TIMELINES] + [
+                {
+                    CONF_NAME: key,
+                    CONF_FIELDS: leg_conf[CONF_CONDITIONS],
+                    CONF_FORECAST_OBSERVATIONS: leg_observations,
+                    CONF_UPDATE: leg_update,
+                    CONF_EXCLUDE_INTERVAL: leg_exclude,
+                    CONF_SCAN_INTERVAL: leg_interval,
+                    CONF_TIMESTEP: leg_timestep,
+                    CONF_START_TIME: "now",
+                }
+            ]
 
     sensors = []
 
     for timeline_spec in config[CONF_TIMELINES]:
-      interval = timeline_spec[CONF_SCAN_INTERVAL] if CONF_SCAN_INTERVAL in timeline_spec else DEFAULT_SCAN_INTERVAL
-      fields =  timeline_spec[CONF_FIELDS] if CONF_FIELDS in timeline_spec else []
-      start_time = timeline_spec[CONF_START_TIME] if CONF_START_TIME in timeline_spec else "now"
-      observations = int(timeline_spec[CONF_FORECAST_OBSERVATIONS]) if CONF_FORECAST_OBSERVATIONS in timeline_spec else None
-      timestep = timeline_spec[CONF_TIMESTEP] if CONF_TIMESTEP in timeline_spec else "1d"
-      exclude = timeline_spec[CONF_EXCLUDE_INTERVAL]  if CONF_EXCLUDE_INTERVAL in timeline_spec else None
-      name = timeline_spec[CONF_NAME] if CONF_NAME in timeline_spec else DEFAULT_TIMELINE_NAME
-      update = timeline_spec[CONF_UPDATE][0] if CONF_UPDATE in timeline_spec else ATTR_AUTO
+        interval = (
+            timeline_spec[CONF_SCAN_INTERVAL]
+            if CONF_SCAN_INTERVAL in timeline_spec
+            else DEFAULT_SCAN_INTERVAL
+        )
+        fields = timeline_spec[CONF_FIELDS] if CONF_FIELDS in timeline_spec else []
+        start_time = (
+            timeline_spec[CONF_START_TIME]
+            if CONF_START_TIME in timeline_spec
+            else "now"
+        )
+        observations = (
+            int(timeline_spec[CONF_FORECAST_OBSERVATIONS])
+            if CONF_FORECAST_OBSERVATIONS in timeline_spec
+            else None
+        )
+        timestep = (
+            timeline_spec[CONF_TIMESTEP] if CONF_TIMESTEP in timeline_spec else "1d"
+        )
+        exclude = (
+            timeline_spec[CONF_EXCLUDE_INTERVAL]
+            if CONF_EXCLUDE_INTERVAL in timeline_spec
+            else None
+        )
+        name = (
+            timeline_spec[CONF_NAME]
+            if CONF_NAME in timeline_spec
+            else DEFAULT_TIMELINE_NAME
+        )
+        update = (
+            timeline_spec[CONF_UPDATE][0] if CONF_UPDATE in timeline_spec else ATTR_AUTO
+        )
 
-      api_fields = {}
+        api_fields = {}
 
-      #find API fields and detect suffixes
-      for field in fields:
-          field_name_parts = field.split('_')
-          suffix_option = field_name_parts[-1]
-          suffix = ''
-          suffix_name = ''
-          if suffix_option in SUFFIXES:
-            field = '_'.join(field_name_parts[:-1])
-            suffix = SUFFIXES[suffix_option][ATTR_API_SUFFIX]
-            suffix_name = SUFFIXES[suffix_option][ATTR_SUFFIX_NAME]
-      
-          if field not in CLIMACELL_DATA_CONDITIONS:
-            _LOGGER.warning("Invalid field: %s", field)
-            continue
-          api_field = CLIMACELL_DATA_CONDITIONS[field][ATTR_FIELD]
-          name = CLIMACELL_DATA_CONDITIONS[field][ATTR_NAME]
-          if suffix_name != '':
-              name = suffix_name + ' ' + name
+        # find API fields and detect suffixes
+        for field in fields:
+            field_name_parts = field.split("_")
+            suffix_option = field_name_parts[-1]
+            suffix = ""
+            suffix_name = ""
+            if suffix_option in SUFFIXES:
+                field = "_".join(field_name_parts[:-1])
+                suffix = SUFFIXES[suffix_option][ATTR_API_SUFFIX]
+                suffix_name = SUFFIXES[suffix_option][ATTR_SUFFIX_NAME]
 
-          api_fields[api_field+suffix]={
-              ATTR_UNIT_OF_MEASUREMENT: UNITS[units][api_field],
-              ATTR_NAME: name,
-              ATTR_CONDITION: field
-          }
+            if field not in CLIMACELL_DATA_CONDITIONS:
+                _LOGGER.warning("Invalid field: %s", field)
+                continue
+            api_field = CLIMACELL_DATA_CONDITIONS[field][ATTR_FIELD]
+            name = CLIMACELL_DATA_CONDITIONS[field][ATTR_NAME]
+            if suffix_name != "":
+                name = suffix_name + " " + name
 
-      data_provider = ClimacellTimelineDataProvider(
-          api_key=config.get(CONF_API_KEY),
-          latitude=latitude,
-          longitude=longitude,
-          interval=interval,
-          units=units,
-          fields=api_fields.keys(),
-          start_time=start_time,
-          observations=observations,
-          timesteps=timestep,
-          exceptions=exclude
-      )
+            api_fields[api_field + suffix] = {
+                ATTR_UNIT_OF_MEASUREMENT: UNITS[units][api_field],
+                ATTR_NAME: name,
+                ATTR_CONDITION: field,
+            }
 
-      data_provider.retrieve_update()
-     
-      for field in api_fields:
-        for observation in range(0, observations):
-          sensors.append(
-            ClimacellTimelineSensor(
-              data_provider=data_provider,
-              field=field,
-              timezone=timezone,
-              condition_name = api_fields[field][ATTR_CONDITION],
-              sensor_friendly_name=sensor_friendly_name + " " + api_fields[field][ATTR_NAME],
-              timestep=timestep,
-              observation=None if observations == 1 else observation,
-              update=update,
-              unit=api_fields[field][ATTR_UNIT_OF_MEASUREMENT],
-          ))
+        data_provider = ClimacellTimelineDataProvider(
+            api_key=config.get(CONF_API_KEY),
+            latitude=latitude,
+            longitude=longitude,
+            interval=interval,
+            units=units,
+            fields=api_fields.keys(),
+            start_time=start_time,
+            observations=observations,
+            timesteps=timestep,
+            exceptions=exclude,
+        )
+
+        data_provider.retrieve_update()
+
+        for field in api_fields:
+            for observation in range(0, observations):
+                sensors.append(
+                    ClimacellTimelineSensor(
+                        data_provider=data_provider,
+                        field=field,
+                        timezone=timezone,
+                        condition_name=api_fields[field][ATTR_CONDITION],
+                        sensor_friendly_name=sensor_friendly_name
+                        + " "
+                        + api_fields[field][ATTR_NAME],
+                        timestep=timestep,
+                        observation=None if observations == 1 else observation,
+                        update=update,
+                        unit=api_fields[field][ATTR_UNIT_OF_MEASUREMENT],
+                    )
+                )
     add_entities(sensors, True)
 
     _LOGGER.info("__init__ setup_platform 'sensor' done for %s.", DOMAIN)
     return True
 
+
 class ClimacellTimelineSensor(Entity):
-    def __init__(self, data_provider, field, timezone, condition_name, sensor_friendly_name, timestep, observation, update, unit):
+    def __init__(
+        self,
+        data_provider,
+        field,
+        timezone,
+        condition_name,
+        sensor_friendly_name,
+        timestep,
+        observation,
+        update,
+        unit,
+    ):
         self.__data_provider = data_provider
         self.__field = field
         self.__timezone = timezone
         self._condition_name = condition_name
         self._observation = observation
         self.__update = update
-        
+
         self.__friendly_name = "cc " + sensor_friendly_name
         if self._observation is None:
-          self._observation = 0
+            self._observation = 0
         else:
-          timestep_suffix=timestep[-1]
-          timestep_int=int(timestep[:-1])
-          timestep_length=1
-          if timestep_suffix == 'm':
-            timestep_length=2
-          timestep_formatted=str(timestep_int * self._observation).zfill(timestep_length)+timestep_suffix
-          self.__friendly_name += " " + timestep_formatted
-        
-        if isinstance(unit,dict):
+            timestep_suffix = timestep[-1]
+            timestep_int = int(timestep[:-1])
+            timestep_length = 1
+            if timestep_suffix == "m":
+                timestep_length = 2
+            timestep_formatted = (
+                str(timestep_int * self._observation).zfill(timestep_length)
+                + timestep_suffix
+            )
+            self.__friendly_name += " " + timestep_formatted
+
+        if isinstance(unit, dict):
             self._unit_of_measurement = None
             self.__valuemap = unit
-        else: 
+        else:
             self._unit_of_measurement = unit
             self.__valuemap = None
 
@@ -235,7 +324,7 @@ class ClimacellTimelineSensor(Entity):
     @staticmethod
     def __to_float(value):
         if type(value) == str:
-            if re.match(r'^-?\d+(?:\.\d+)?$', value) is None:
+            if re.match(r"^-?\d+(?:\.\d+)?$", value) is None:
                 return value
             elif re.search("^[1-9][0-9]{0,2}(?:,[0-9]{3}){0,3}$", value):
                 return int(value)
@@ -265,8 +354,8 @@ class ClimacellTimelineSensor(Entity):
         abs_datetime = self._observation_time
         try:
             dt = datetime.strptime(self._observation_time, "%Y-%m-%dT%H:%M:%S.%fZ")
-            utc = dt.replace(tzinfo=pytz.timezone('UTC'), microsecond=0, second=0)
-            #utc_dt = pytz.utc.localize(utc, is_dst=None)
+            utc = dt.replace(tzinfo=pytz.timezone("UTC"), microsecond=0, second=0)
+            # utc_dt = pytz.utc.localize(utc, is_dst=None)
             local_dt = utc.astimezone(self.__timezone)
             abs_datetime = local_dt.isoformat()
         except Exception as e:
@@ -275,7 +364,7 @@ class ClimacellTimelineSensor(Entity):
         attrs = {
             ATTR_ATTRIBUTION: ATTRIBUTION,
             ATTR_OBSERVATION_TIME: abs_datetime,
-            ATTR_UNIT_OF_MEASUREMENT: self._unit_of_measurement
+            ATTR_UNIT_OF_MEASUREMENT: self._unit_of_measurement,
         }
 
         return attrs
@@ -285,16 +374,20 @@ class ClimacellTimelineSensor(Entity):
             self.__data_provider.retrieve_update()
 
         if self.__data_provider.data is not None:
-            if self._observation >= len(self.__data_provider.data['intervals']):
-                _LOGGER.error('observation %s missing: %s',self._observation,self.__data_provider.data)
+            if self._observation >= len(self.__data_provider.data["intervals"]):
+                _LOGGER.error(
+                    "observation %s missing: %s",
+                    self._observation,
+                    self.__data_provider.data,
+                )
                 return
 
-            sensor_data = self.__data_provider.data['intervals'][self._observation]
-            self._state = sensor_data['values'][self.__field]
+            sensor_data = self.__data_provider.data["intervals"][self._observation]
+            self._state = sensor_data["values"][self.__field]
             if self.__valuemap is not None:
                 self._state = self.__valuemap[str(self._state)]
-            self._observation_time = sensor_data['startTime']
+            self._observation_time = sensor_data["startTime"]
         else:
-            _LOGGER.warning("TimelineSensor.update - Provider has no data for: %s", self.name)
-
-
+            _LOGGER.warning(
+                "TimelineSensor.update - Provider has no data for: %s", self.name
+            )
