@@ -53,7 +53,7 @@ To use the `ClimaCell` custom component you must first obtain an <a href="https:
     <dl>
       <dt>name</dt>
       <dd><i>(string)(Optional)</i><br>Name of timeline used for naming the sensors.</dd>
-      <dd><i>Default value:</i><br>Timeline</dd>
+      <dd><i>Default value:</i><br>None</dd>
       <dt>fields</dt>
       <dd><i>(string list)(Required)</i><br>Conditions to view. These depend on the type of service, see the section below for more details.</dd>
       <dt>timestep</dt>
@@ -79,7 +79,6 @@ To use the `ClimaCell` custom component you must first obtain an <a href="https:
       <dt>start_time</dt>
       <dd><i>(integer)(Optional)</i><br>Number of minutes in future (+) or past (-) from the current time to start the timeline. The availability depends on timestep and requested fields.</dd>
       <dd><i>Default value:</i><br>0</dd>
-
     </dl>
   </dd>   
 </dl>

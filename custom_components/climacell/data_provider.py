@@ -3,7 +3,6 @@ from datetime import timedelta
 from datetime import time
 
 import logging
-import re
 
 import json
 import requests

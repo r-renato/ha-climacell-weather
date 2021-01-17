@@ -44,7 +44,6 @@ from custom_components.climacell.global_const import (
     ATTR_ROAD_RISK,
     ATTR_ROAD_RISK_CONFIDENCE,
     ATTR_ROAD_RISK_CONDITIONS,
-    ATTR_FIRE_INDEX,
     CONF_EXCLUDE_INTERVAL,
     SCHEMA_EXCLUDE_INTERVAL,
     UPDATE_MODES,

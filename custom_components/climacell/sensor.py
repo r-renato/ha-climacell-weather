@@ -46,7 +46,6 @@ from . import DOMAIN, ClimacellTimelineDataProvider
 _LOGGER = logging.getLogger(__name__)
 
 DEFAULT_NAME = "Climacell"
-DEFAULT_TIMELINE_NAME = "Timeline"
 
 DEFAULT_SCAN_INTERVAL = timedelta(seconds=300)
 
@@ -61,7 +60,7 @@ MONITORED_CONDITIONS_SCHEMA = vol.Schema(
 
 SCHEMA_TIMELINE = vol.Schema(
     {
-        vol.Optional(CONF_NAME, default=DEFAULT_TIMELINE_NAME): cv.string,
+        vol.Optional(CONF_NAME): cv.string,
         vol.Required(CONF_FIELDS): vol.All(cv.ensure_list, [cv.string]),
         vol.Optional(CONF_FORECAST_OBSERVATIONS): cv.positive_int,
         vol.Optional(CONF_UPDATE): vol.All(cv.ensure_list, [vol.In(UPDATE_MODES)]),
@@ -163,7 +162,7 @@ def setup_platform(hass, config, add_entities, discovery_info=None):
 
                 config[CONF_TIMELINES] = config[CONF_TIMELINES] + [
                     {
-                        CONF_NAME: key,
+                        CONF_NAME: None,
                         CONF_FIELDS: leg_conf[CONF_CONDITIONS],
                         CONF_FORECAST_OBSERVATIONS: leg_observations,
                         CONF_UPDATE: leg_update,
@@ -199,10 +198,10 @@ def setup_platform(hass, config, add_entities, discovery_info=None):
             if CONF_EXCLUDE_INTERVAL in timeline_spec
             else None
         )
-        name = (
+        timeline_name = (
             timeline_spec[CONF_NAME]
             if CONF_NAME in timeline_spec
-            else DEFAULT_TIMELINE_NAME
+            else None
         )
         update = (
             timeline_spec[CONF_UPDATE][0] if CONF_UPDATE in timeline_spec else ATTR_AUTO
@@ -252,6 +251,9 @@ def setup_platform(hass, config, add_entities, discovery_info=None):
         )
 
         data_provider.retrieve_update()
+        timeline_friendly_name=sensor_friendly_name
+        if timeline_name not in [None, '']:
+          timeline_friendly_name+=" "+timeline_name
 
         for field in api_fields:
             for observation in range(0, observations):
@@ -261,7 +263,7 @@ def setup_platform(hass, config, add_entities, discovery_info=None):
                         field=field,
                         timezone=timezone,
                         condition_name=api_fields[field][ATTR_CONDITION],
-                        sensor_friendly_name=sensor_friendly_name
+                        sensor_friendly_name=timeline_friendly_name
                         + " "
                         + api_fields[field][ATTR_NAME],
                         timestep=timestep,
@@ -354,8 +356,6 @@ class ClimacellTimelineSensor(Entity):
     @property
     def device_state_attributes(self):
         """Return the state attributes."""
-        abs_datetime = self._observation_time
-
         attrs = {
             ATTR_ATTRIBUTION: ATTRIBUTION,
             ATTR_OBSERVATION_TIME: self._observation_time,

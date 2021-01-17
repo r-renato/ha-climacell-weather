@@ -16,7 +16,6 @@ from homeassistant.const import (
     ATTR_ICON,
     SUN_EVENT_SUNSET,
     SUN_EVENT_SUNRISE,
-    ATTR_UNIT_OF_MEASUREMENT,
 )
 
 ATTRIBUTION = "Powered by Climacell"
