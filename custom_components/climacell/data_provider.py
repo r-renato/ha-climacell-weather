@@ -178,16 +178,7 @@ class ClimacellTimelineDataProvider:
             querystring = self._params
             querystring += "&fields=" + self.__fields
 
-            start_time = self.__start_time
-            start_time_obj = datetime.now()
-            match = re.match("^([-+])?([0-9]+)$", start_time)
-            if match is not None:
-                delta = timedelta(minutes=int(match.group(2)))
-                if match.group(1) == "-":
-                    start_time_obj -= delta
-                else:
-                    start_time_obj += delta
-
+            start_time_obj = datetime.now() + timedelta(minutes=self.__start_time)
             start_time_obj = start_time_obj.replace(microsecond=0, tzinfo=None)
             querystring += "&startTime=" + start_time_obj.isoformat() + "Z"
             if self.__observations is not None:

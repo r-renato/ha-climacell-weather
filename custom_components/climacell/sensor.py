@@ -62,9 +62,7 @@ MONITORED_CONDITIONS_SCHEMA = vol.Schema(
 SCHEMA_TIMELINE = vol.Schema(
     {
         vol.Optional(CONF_NAME, default=DEFAULT_TIMELINE_NAME): cv.string,
-        vol.Required(CONF_FIELDS): vol.All(
-            cv.ensure_list, [vol.In(CLIMACELL_DATA_CONDITIONS.keys())]
-        ),
+        vol.Required(CONF_FIELDS): vol.All(cv.ensure_list, [cv.string]),
         vol.Optional(CONF_FORECAST_OBSERVATIONS): cv.positive_int,
         vol.Optional(CONF_UPDATE): vol.All(cv.ensure_list, [vol.In(UPDATE_MODES)]),
         vol.Optional(CONF_EXCLUDE_INTERVAL): vol.All(
@@ -72,7 +70,7 @@ SCHEMA_TIMELINE = vol.Schema(
         ),
         vol.Optional(CONF_SCAN_INTERVAL): cv.time_period,
         vol.Optional(CONF_TIMESTEP, default="1d"): vol.In(TIMESTEP_VALUES),
-        vol.Optional(CONF_START_TIME, default="now"): cv.string,
+        vol.Optional(CONF_START_TIME, default=0): vol.Coerce(int),
     }
 )
 
@@ -132,48 +130,49 @@ def setup_platform(hass, config, add_entities, discovery_info=None):
     if CONF_TIMELINES not in config:
         config[CONF_TIMELINES] = []
 
-    for key in LEGACY_CONF_TIMESTEPS:
-        if key in config[CONF_MONITORED_CONDITIONS]:
-            leg_conf = config[CONF_MONITORED_CONDITIONS][key]
+    if CONF_MONITORED_CONDITIONS in config:
+        for key in LEGACY_CONF_TIMESTEPS:
+            if key in config[CONF_MONITORED_CONDITIONS]:
+                leg_conf = config[CONF_MONITORED_CONDITIONS][key]
 
-            default_observations = 1 if key == CONF_REALTIME else 5
+                default_observations = 1 if key == CONF_REALTIME else 5
 
-            leg_observations = (
-                leg_conf[CONF_FORECAST_OBSERVATIONS][0]
-                if CONF_FORECAST_OBSERVATIONS in leg_conf
-                else default_observations
-            )
-            leg_interval = (
-                leg_conf[CONF_SCAN_INTERVAL]
-                if CONF_SCAN_INTERVAL in leg_conf
-                else DEFAULT_SCAN_INTERVAL
-            )
-            leg_exclude = (
-                leg_conf[CONF_EXCLUDE_INTERVAL]
-                if CONF_EXCLUDE_INTERVAL in leg_conf
-                else None
-            )
-            leg_update = (
-                leg_conf[CONF_UPDATE][0] if CONF_UPDATE in leg_conf else ATTR_AUTO
-            )
-            leg_timestep = (
-                str(leg_conf[CONF_TIMESTEP][0]) + "m"
-                if CONF_TIMESTEP in leg_conf
-                else LEGACY_CONF_TIMESTEPS[key]
-            )
+                leg_observations = (
+                    leg_conf[CONF_FORECAST_OBSERVATIONS][0]
+                    if CONF_FORECAST_OBSERVATIONS in leg_conf
+                    else default_observations
+                )
+                leg_interval = (
+                    leg_conf[CONF_SCAN_INTERVAL]
+                    if CONF_SCAN_INTERVAL in leg_conf
+                    else DEFAULT_SCAN_INTERVAL
+                )
+                leg_exclude = (
+                    leg_conf[CONF_EXCLUDE_INTERVAL]
+                    if CONF_EXCLUDE_INTERVAL in leg_conf
+                    else None
+                )
+                leg_update = (
+                    leg_conf[CONF_UPDATE][0] if CONF_UPDATE in leg_conf else ATTR_AUTO
+                )
+                leg_timestep = (
+                    str(leg_conf[CONF_TIMESTEP][0]) + "m"
+                    if CONF_TIMESTEP in leg_conf
+                    else LEGACY_CONF_TIMESTEPS[key]
+                )
 
-            config[CONF_TIMELINES] = config[CONF_TIMELINES] + [
-                {
-                    CONF_NAME: key,
-                    CONF_FIELDS: leg_conf[CONF_CONDITIONS],
-                    CONF_FORECAST_OBSERVATIONS: leg_observations,
-                    CONF_UPDATE: leg_update,
-                    CONF_EXCLUDE_INTERVAL: leg_exclude,
-                    CONF_SCAN_INTERVAL: leg_interval,
-                    CONF_TIMESTEP: leg_timestep,
-                    CONF_START_TIME: "now",
-                }
-            ]
+                config[CONF_TIMELINES] = config[CONF_TIMELINES] + [
+                    {
+                        CONF_NAME: key,
+                        CONF_FIELDS: leg_conf[CONF_CONDITIONS],
+                        CONF_FORECAST_OBSERVATIONS: leg_observations,
+                        CONF_UPDATE: leg_update,
+                        CONF_EXCLUDE_INTERVAL: leg_exclude,
+                        CONF_SCAN_INTERVAL: leg_interval,
+                        CONF_TIMESTEP: leg_timestep,
+                        CONF_START_TIME: 0,
+                    }
+                ]
 
     sensors = []
 
@@ -185,9 +184,7 @@ def setup_platform(hass, config, add_entities, discovery_info=None):
         )
         fields = timeline_spec[CONF_FIELDS] if CONF_FIELDS in timeline_spec else []
         start_time = (
-            timeline_spec[CONF_START_TIME]
-            if CONF_START_TIME in timeline_spec
-            else "now"
+            timeline_spec[CONF_START_TIME] if CONF_START_TIME in timeline_spec else 0
         )
         observations = (
             int(timeline_spec[CONF_FORECAST_OBSERVATIONS])
@@ -215,27 +212,30 @@ def setup_platform(hass, config, add_entities, discovery_info=None):
 
         # find API fields and detect suffixes
         for field in fields:
-            field_name_parts = field.split("_")
-            suffix_option = field_name_parts[-1]
             suffix = ""
             suffix_name = ""
-            if suffix_option in SUFFIXES:
-                field = "_".join(field_name_parts[:-1])
-                suffix = SUFFIXES[suffix_option][ATTR_API_SUFFIX]
-                suffix_name = SUFFIXES[suffix_option][ATTR_SUFFIX_NAME]
+            if field in LEGACY_FIELDS:
+                field = LEGACY_FIELDS[field]
 
-            if field not in CLIMACELL_DATA_CONDITIONS:
-                _LOGGER.warning("Invalid field: %s", field)
+            for suffix_option in SUFFIXES:
+                if field.endswith(suffix_option):
+                    field = field[: -len(suffix_option)]
+                    suffix = suffix_option
+                    suffix_name = SUFFIXES[suffix_option]
+                    break
+
+            if field not in CLIMACELL_FIELDS:
+                _LOGGER.error("Invalid field: %s", field)
                 continue
-            api_field = CLIMACELL_DATA_CONDITIONS[field][ATTR_FIELD]
-            name = CLIMACELL_DATA_CONDITIONS[field][ATTR_NAME]
+            name = CLIMACELL_FIELDS[field][ATTR_NAME]
             if suffix_name != "":
                 name = suffix_name + " " + name
 
-            api_fields[api_field + suffix] = {
-                ATTR_UNIT_OF_MEASUREMENT: UNITS[units][api_field],
+            api_fields[field + suffix] = {
+                ATTR_UNIT_OF_MEASUREMENT: UNITS[units][field],
                 ATTR_NAME: name,
-                ATTR_CONDITION: field,
+                ATTR_CONDITION: CLIMACELL_FIELDS[field][ATTR_CONDITION],
+                ATTR_ICON: CLIMACELL_FIELDS[field][ATTR_ICON],
             }
 
         data_provider = ClimacellTimelineDataProvider(
@@ -268,6 +268,7 @@ def setup_platform(hass, config, add_entities, discovery_info=None):
                         observation=None if observations == 1 else observation,
                         update=update,
                         unit=api_fields[field][ATTR_UNIT_OF_MEASUREMENT],
+                        icon=api_fields[field][ATTR_ICON],
                     )
                 )
     add_entities(sensors, True)
@@ -288,6 +289,7 @@ class ClimacellTimelineSensor(Entity):
         observation,
         update,
         unit,
+        icon,
     ):
         self.__data_provider = data_provider
         self.__field = field
@@ -295,6 +297,7 @@ class ClimacellTimelineSensor(Entity):
         self._condition_name = condition_name
         self._observation = observation
         self.__update = update
+        self.__icon = icon
 
         self.__friendly_name = "cc " + sensor_friendly_name
         if self._observation is None:
@@ -341,7 +344,7 @@ class ClimacellTimelineSensor(Entity):
     @property
     def icon(self):
         """Icon to use in the frontend, if any."""
-        return CLIMACELL_DATA_CONDITIONS[self._condition_name][ATTR_ICON]
+        return self.__icon
 
     @property
     def state(self):
@@ -352,18 +355,10 @@ class ClimacellTimelineSensor(Entity):
     def device_state_attributes(self):
         """Return the state attributes."""
         abs_datetime = self._observation_time
-        try:
-            dt = datetime.strptime(self._observation_time, "%Y-%m-%dT%H:%M:%S.%fZ")
-            utc = dt.replace(tzinfo=pytz.timezone("UTC"), microsecond=0, second=0)
-            # utc_dt = pytz.utc.localize(utc, is_dst=None)
-            local_dt = utc.astimezone(self.__timezone)
-            abs_datetime = local_dt.isoformat()
-        except Exception as e:
-            pass
 
         attrs = {
             ATTR_ATTRIBUTION: ATTRIBUTION,
-            ATTR_OBSERVATION_TIME: abs_datetime,
+            ATTR_OBSERVATION_TIME: self._observation_time,
             ATTR_UNIT_OF_MEASUREMENT: self._unit_of_measurement,
         }
 
@@ -386,7 +381,16 @@ class ClimacellTimelineSensor(Entity):
             self._state = sensor_data["values"][self.__field]
             if self.__valuemap is not None:
                 self._state = self.__valuemap[str(self._state)]
+
             self._observation_time = sensor_data["startTime"]
+            try:
+                dt = datetime.strptime(self._observation_time, "%Y-%m-%dT%H:%M:%S.%fZ")
+                utc = dt.replace(tzinfo=pytz.timezone("UTC"), microsecond=0, second=0)
+                local_dt = utc.astimezone(self.__timezone)
+                self._observation_time = local_dt.isoformat()
+            except Exception as e:
+                pass
+
         else:
             _LOGGER.warning(
                 "TimelineSensor.update - Provider has no data for: %s", self.name

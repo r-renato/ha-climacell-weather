@@ -98,234 +98,231 @@ ATTR_SUFFIX_NAME = "suffix_name"
 ATTR_CONDITION = "condition"
 
 SUFFIXES = {
-    "min": {ATTR_API_SUFFIX: "Min", ATTR_SUFFIX_NAME: "Minimum"},
-    "max": {ATTR_API_SUFFIX: "Max", ATTR_SUFFIX_NAME: "Maximum"},
-    "avg": {ATTR_API_SUFFIX: "Avg", ATTR_SUFFIX_NAME: "Average"},
-    "mintime": {ATTR_API_SUFFIX: "MinTime", ATTR_SUFFIX_NAME: "Time of minium"},
-    "maxtime": {
-        ATTR_API_SUFFIX: "MaxTime",
-        ATTR_SUFFIX_NAME: "Time of maximum",
-    },
+    "Min": "Minimum",
+    "Max": "Maximum",
+    "Avg": "Average",
+    "MinTime": "Time of minium",
+    "MaxTime": "Time of maximum",
 }
 
-CLIMACELL_DATA_CONDITIONS = {
-    ATTR_WEATHER_TEMPERATURE: {
-        ATTR_FIELD: "temperature",
+CLIMACELL_FIELDS = {
+    "temperature": {
         ATTR_NAME: "Temperature",
         ATTR_ICON: "mdi:thermometer",
+        ATTR_CONDITION: ATTR_WEATHER_TEMPERATURE,
     },
-    ATTR_WEATHER_FEELS_LIKE: {
-        ATTR_FIELD: "temperatureApparent",
+    "temperatureApparent": {
         ATTR_NAME: "Feels Like",
         ATTR_ICON: "mdi:thermometer",
+        ATTR_CONDITION: ATTR_WEATHER_FEELS_LIKE,
     },
-    ATTR_WEATHER_DEWPOINT: {
-        ATTR_FIELD: "dewPoint",
+    "dewPoint": {
         ATTR_NAME: "Dewpoint",
         ATTR_ICON: "mdi:thermometer",
+        ATTR_CONDITION: ATTR_WEATHER_DEWPOINT,
     },
-    ATTR_WEATHER_HUMIDITY: {
-        ATTR_FIELD: "humidity",
+    "humidity": {
         ATTR_NAME: "Humidity Percentage",
         ATTR_ICON: "mdi:water-percent",
+        ATTR_CONDITION: ATTR_WEATHER_HUMIDITY,
     },
-    ATTR_WEATHER_WIND_SPEED: {
-        ATTR_FIELD: "windSpeed",
+    "windSpeed": {
         ATTR_NAME: "Wind speed",
         ATTR_ICON: "mdi:weather-windy",
+        ATTR_CONDITION: ATTR_WEATHER_WIND_SPEED,
     },
-    ATTR_WEATHER_WIND_DIRECTION: {
-        ATTR_FIELD: "windDirection",
+    "windDirection": {
         ATTR_NAME: "Wind Direction",
         ATTR_ICON: "mdi:compass",
+        ATTR_CONDITION: ATTR_WEATHER_WIND_DIRECTION,
     },
-    ATTR_WEATHER_WIND_GUST: {
-        ATTR_FIELD: "windGust",
+    "windGust": {
         ATTR_NAME: "Wind Gust",
         ATTR_ICON: "mdi:weather-windy-variant",
+        ATTR_CONDITION: ATTR_WEATHER_WIND_GUST,
     },
-    ATTR_WEATHER_PRESSURE: {
-        ATTR_FIELD: "pressureSurfaceLevel",
+    "pressureSurfaceLevel": {
         ATTR_NAME: "Barometric pressure",
         ATTR_ICON: "mdi:gauge",
+        ATTR_CONDITION: ATTR_WEATHER_PRESSURE,
     },
-    ATTR_WEATHER_PRESSURE_SEALEVEL: {
-        ATTR_FIELD: "pressureSeaLevel",
+    "pressureSeaLevel": {
         ATTR_NAME: "Barometric pressure at sea level",
         ATTR_ICON: "mdi:gauge",
+        ATTR_CONDITION: ATTR_WEATHER_PRESSURE_SEALEVEL,
     },
-    ATTR_FORECAST_PRECIPITATION_TYPE: {
-        ATTR_FIELD: "precipitationType",
+    "precipitationType": {
         ATTR_NAME: "Precipitation Type",
         ATTR_ICON: "mdi:weather-pouring",
+        ATTR_CONDITION: ATTR_FORECAST_PRECIPITATION_TYPE,
     },
-    ATTR_FORECAST_PRECIPITATION: {
-        ATTR_FIELD: "precipitationIntensity",
+    "precipitationIntensity": {
         ATTR_NAME: "Precipitation",
         ATTR_ICON: "mdi:weather-rainy",
+        ATTR_CONDITION: ATTR_FORECAST_PRECIPITATION,
     },
-    ATTR_FORECAST_PRECIPITATION_PROBABILITY: {
-        ATTR_FIELD: "precipitationProbability",
+    "precipitationProbability": {
         ATTR_NAME: "precipitation Probability",
         ATTR_ICON: "mdi:weather-rainy",
+        ATTR_CONDITION: ATTR_FORECAST_PRECIPITATION_PROBABILITY,
     },
-    SUN_EVENT_SUNRISE: {
-        ATTR_FIELD: "sunriseTime",
+    "sunriseTime": {
         ATTR_NAME: "Sunrise",
         ATTR_ICON: "mdi:white-balance-sunny",
+        ATTR_CONDITION: SUN_EVENT_SUNRISE,
     },
-    SUN_EVENT_SUNSET: {
-        ATTR_FIELD: "sunsetTime",
+    "sunsetTime": {
         ATTR_NAME: "Sunset",
         ATTR_ICON: "mdi:weather-night",
+        ATTR_CONDITION: SUN_EVENT_SUNSET,
     },
-    ATTR_WEATHER_SOLAR_GHI: {
-        ATTR_FIELD: "solarGHI",
+    "solarGHI": {
         ATTR_NAME: "Solar GHI",
         ATTR_ICON: "mdi:white-balance-sunny",
+        ATTR_CONDITION: ATTR_WEATHER_SOLAR_GHI,
     },
-    ATTR_WEATHER_VISIBILITY: {
-        ATTR_FIELD: "visibility",
+    "visibility": {
         ATTR_NAME: "Visibility",
         ATTR_ICON: "mdi:eye",
+        ATTR_CONDITION: ATTR_WEATHER_VISIBILITY,
     },
-    ATTR_WEATHER_CLOUD_COVER: {
-        ATTR_FIELD: "cloudCover",
+    "cloudCover": {
         ATTR_NAME: "Cloud Cover",
         ATTR_ICON: "mdi:weather-partly-cloudy",
+        ATTR_CONDITION: ATTR_WEATHER_CLOUD_COVER,
     },
-    ATTR_WEATHER_CLOUD_BASE: {
-        ATTR_FIELD: "cloudBase",
+    "cloudBase": {
         ATTR_NAME: "Cloud Base",
         ATTR_ICON: "mdi:weather-partly-cloudy",
+        ATTR_CONDITION: ATTR_WEATHER_CLOUD_BASE,
     },
-    ATTR_WEATHER_CLOUD_CEILING: {
-        ATTR_FIELD: "cloudCeiling",
+    "cloudCeiling": {
         ATTR_NAME: "Cloud Ceiling",
         ATTR_ICON: "mdi:weather-partly-cloudy",
+        ATTR_CONDITION: ATTR_WEATHER_CLOUD_CEILING,
     },
-    ATTR_MOON_PHASE: {
-        ATTR_FIELD: "moonPhase",
+    "moonPhase": {
         ATTR_NAME: "Moon Phase",
         ATTR_ICON: "mdi:weather-night",
+        ATTR_CONDITION: ATTR_MOON_PHASE,
     },
-    ATTR_WEATHER_CONDITION: {
-        ATTR_FIELD: "weatherCode",
+    "weatherCode": {
         ATTR_NAME: "Weather Condition",
         ATTR_ICON: "mdi:thermometer",
+        ATTR_CONDITION: ATTR_WEATHER_CONDITION,
     },
     #
     # Air Quality
     #
-    ATTR_AIR_QUALITY_PM25: {
-        ATTR_FIELD: "particulateMatter25",
+    "particulateMatter25": {
         ATTR_NAME: "pm25",
         ATTR_ICON: "mdi:eye",
+        ATTR_CONDITION: ATTR_AIR_QUALITY_PM25,
     },
-    ATTR_AIR_QUALITY_PM10: {
-        ATTR_FIELD: "particulateMatter10",
+    "particulateMatter10": {
         ATTR_NAME: "pm10",
         ATTR_ICON: "mdi:eye",
+        ATTR_CONDITION: ATTR_AIR_QUALITY_PM10,
     },
-    ATTR_AIR_QUALITY_O3: {
-        ATTR_FIELD: "pollutantO3",
+    "pollutantO3": {
         ATTR_NAME: "o3",
         ATTR_ICON: "mdi:eye",
+        ATTR_CONDITION: ATTR_AIR_QUALITY_O3,
     },
-    ATTR_AIR_QUALITY_NO2: {
-        ATTR_FIELD: "pollutantNO2",
+    "pollutantNO2": {
         ATTR_NAME: "no2",
         ATTR_ICON: "mdi:eye",
+        ATTR_CONDITION: ATTR_AIR_QUALITY_NO2,
     },
-    ATTR_AIR_QUALITY_CO: {
-        ATTR_FIELD: "pollutantCO",
+    "pollutantCO": {
         ATTR_NAME: "co",
         ATTR_ICON: "mdi:eye",
+        ATTR_CONDITION: ATTR_AIR_QUALITY_CO,
     },
-    ATTR_AIR_QUALITY_SO2: {
-        ATTR_FIELD: "pollutantSO2",
+    "pollutantSO2": {
         ATTR_NAME: "so2",
         ATTR_ICON: "mdi:eye",
+        ATTR_CONDITION: ATTR_AIR_QUALITY_SO2,
     },
-    ATTR_AIR_QUALITY_EPA_AQI: {
-        ATTR_FIELD: "epaIndex",
+    "epaIndex": {
         ATTR_NAME: "EPA AQI",
         ATTR_ICON: "mdi:eye",
+        ATTR_CONDITION: ATTR_AIR_QUALITY_EPA_AQI,
     },
-    ATTR_AIR_QUALITY_EPA_PRIM: {
-        ATTR_FIELD: "epaPrimaryPollutant",
+    "epaPrimaryPollutant": {
         ATTR_NAME: "EPA Primary Pollutant",
         ATTR_ICON: "mdi:eye",
+        ATTR_CONDITION: ATTR_AIR_QUALITY_EPA_PRIM,
     },
-    ATTR_AIR_QUALITY_EPA_HEALTH: {
-        ATTR_FIELD: "epaHealthConcern",
+    "epaHealthConcern": {
         ATTR_NAME: "EPA Health Concern",
         ATTR_ICON: "mdi:eye",
+        ATTR_CONDITION: ATTR_AIR_QUALITY_EPA_HEALTH,
     },
-    ATTR_AIR_QUALITY_CHINA_AQI: {
-        ATTR_FIELD: "mepIndex",
+    "mepIndex": {
         ATTR_NAME: "China AQI",
         ATTR_ICON: "mdi:eye",
+        ATTR_CONDITION: ATTR_AIR_QUALITY_CHINA_AQI,
     },
-    ATTR_AIR_QUALITY_CHINA_PRIMARY_POLLUTANT: {
-        ATTR_FIELD: "mepPrimaryPollutant",
+    "mepPrimaryPollutant": {
         ATTR_NAME: "China Primary Pollutant",
         ATTR_ICON: "mdi:eye",
+        ATTR_CONDITION: ATTR_AIR_QUALITY_CHINA_PRIMARY_POLLUTANT,
     },
-    ATTR_AIR_QUALITY_CHINA_HEALTH_CONCERN: {
-        ATTR_FIELD: "mepHealthConcern",
+    "mepHealthConcern": {
         ATTR_NAME: "China Health Concern",
         ATTR_ICON: "mdi:eye",
+        ATTR_CONDITION: ATTR_AIR_QUALITY_CHINA_HEALTH_CONCERN,
     },
     #
     # Pollen
     #
-    ATTR_POLLEN_TREE: {
-        ATTR_FIELD: "treeIndex",
+    "treeIndex": {
         ATTR_NAME: "Pollen Tree",
         ATTR_ICON: "mdi:tree",
+        ATTR_CONDITION: ATTR_POLLEN_TREE,
     },
-    ATTR_POLLEN_WEED: {
-        ATTR_FIELD: "grassIndex",
+    "grassIndex": {
         ATTR_NAME: "Pollen Weed",
         ATTR_ICON: "mdi:sprout",
+        ATTR_CONDITION: ATTR_POLLEN_WEED,
     },
-    ATTR_POLLEN_GRASS: {
-        ATTR_FIELD: "weedIndex",
+    "weedIndex": {
         ATTR_NAME: "Pollen Grass",
         ATTR_ICON: "mdi:flower",
+        ATTR_CONDITION: ATTR_POLLEN_GRASS,
     },
     #
     # Road Risk
     #
-    ATTR_ROAD_RISK_SCORE: {
-        ATTR_FIELD: "roadRiskScore",
+    "roadRiskScore": {
         ATTR_NAME: "Road Risk Score",
         ATTR_ICON: "",
+        ATTR_CONDITION: ATTR_ROAD_RISK_SCORE,
     },
-    ATTR_ROAD_RISK: {
-        ATTR_FIELD: "roadRisk",
-        ATTR_NAME: "Road Risk",
-        ATTR_ICON: "",
-    },
-    ATTR_ROAD_RISK_CONFIDENCE: {
-        ATTR_FIELD: "roadRiskConfidence",
+    "roadRisk": {ATTR_NAME: "Road Risk", ATTR_ICON: "", ATTR_CONDITION: ATTR_ROAD_RISK},
+    "roadRiskConfidence": {
         ATTR_NAME: "Road Risk Confidence",
         ATTR_ICON: "",
+        ATTR_CONDITION: ATTR_ROAD_RISK_CONFIDENCE,
     },
-    ATTR_ROAD_RISK_CONDITIONS: {
-        ATTR_FIELD: "roadRiskConditions",
+    "roadRiskConditions": {
         ATTR_NAME: "Road Risk Conditions",
         ATTR_ICON: "",
+        ATTR_CONDITION: ATTR_ROAD_RISK_CONDITIONS,
     },
     #
     # Fire Index
     #
-    ATTR_FIRE_INDEX: {
-        ATTR_FIELD: "fireIndex",
+    "fireIndex": {
         ATTR_NAME: "Fire Index",
         ATTR_ICON: "mdi:pine-tree-fire",
+        ATTR_CONDITION: ATTR_FIRE_INDEX,
     },
+}
+
+LEGACY_FIELDS = {
+    spec[ATTR_CONDITION]: field for (field, spec) in CLIMACELL_FIELDS.items()
 }
 
 SCHEMA_EXCLUDE_INTERVAL = vol.Schema(
