@@ -68,7 +68,7 @@ SCHEMA_TIMELINE = vol.Schema(
             cv.ensure_list, [vol.Schema(SCHEMA_EXCLUDE_INTERVAL)]
         ),
         vol.Optional(CONF_SCAN_INTERVAL): cv.time_period,
-        vol.Optional(CONF_TIMESTEP, default="1d"): vol.In(TIMESTEP_VALUES),
+        vol.Optional(CONF_TIMESTEP, default="1d"): cv.string,
         vol.Optional(CONF_START_TIME, default=0): vol.Coerce(int),
     }
 )
@@ -193,6 +193,10 @@ def setup_platform(hass, config, add_entities, discovery_info=None):
         timestep = (
             timeline_spec[CONF_TIMESTEP] if CONF_TIMESTEP in timeline_spec else "1d"
         )
+        if not re.match('^[0-9]+[mhd]$',timestep) :
+            _LOGGER.error("Invalid timestep: %s", timestep)
+            continue
+
         exclude = (
             timeline_spec[CONF_EXCLUDE_INTERVAL]
             if CONF_EXCLUDE_INTERVAL in timeline_spec

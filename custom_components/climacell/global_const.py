@@ -38,8 +38,6 @@ CONF_TIMELINES = "timelines"
 CONF_FIELDS = "fields"
 CONF_START_TIME = "start_time"
 
-TIMESTEP_VALUES = ["1m", "5m", "15m", "30m", "1h", "1d"]
-
 CONF_UPDATE = "update"
 ATTR_AUTO = "auto"
 ATTR_MANUAL = "manual"
