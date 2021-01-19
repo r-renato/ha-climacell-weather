@@ -217,6 +217,7 @@ def setup_platform(hass, config, add_entities, discovery_info=None):
         for field in fields:
             suffix = ""
             suffix_name = ""
+            raw = False
             if field in LEGACY_FIELDS:
                 field = LEGACY_FIELDS[field]
 
@@ -224,18 +225,26 @@ def setup_platform(hass, config, add_entities, discovery_info=None):
                 if field.endswith(suffix_option):
                     field = field[: -len(suffix_option)]
                     suffix = suffix_option
-                    suffix_name = SUFFIXES[suffix_option]
+                    suffix_name = " " + SUFFIXES[suffix_option]
                     break
-
+ 
+            if field.startswith(RAW_PREFIX):
+                raw = True
+                field = field[len(RAW_PREFIX):]
+                
             if field not in CLIMACELL_FIELDS:
                 _LOGGER.error("Invalid field: %s", field)
                 continue
-            name = CLIMACELL_FIELDS[field][ATTR_NAME]
-            if suffix_name != "":
-                name = suffix_name + " " + name
+            
+            name = CLIMACELL_FIELDS[field][ATTR_NAME] + suffix_name
+            
+            unit = UNITS[units][field]
+            if raw and isinstance(unit, dict): 
+                unit = None
+                name = RAW_PREFIX + " " + name
 
             api_fields[field + suffix] = {
-                ATTR_UNIT_OF_MEASUREMENT: UNITS[units][field],
+                ATTR_UNIT_OF_MEASUREMENT: unit,
                 ATTR_NAME: name,
                 ATTR_CONDITION: CLIMACELL_FIELDS[field][ATTR_CONDITION],
                 ATTR_ICON: CLIMACELL_FIELDS[field][ATTR_ICON],
@@ -323,6 +332,9 @@ class ClimacellTimelineSensor(Entity):
         if isinstance(unit, dict):
             self._unit_of_measurement = None
             self.__valuemap = unit
+        elif unit is None:
+            self._unit_of_measurement = None
+            self.__valuemap = None
         else:
             self._unit_of_measurement = unit
             self.__valuemap = None

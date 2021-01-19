@@ -43,6 +43,7 @@ ATTR_AUTO = "auto"
 ATTR_MANUAL = "manual"
 
 ATTR_FIELD = "field"
+RAW_PREFIX = "Raw"
 
 ATTR_WEATHER_FEELS_LIKE = "feels_like"
 ATTR_WEATHER_DEWPOINT = "dewpoint"

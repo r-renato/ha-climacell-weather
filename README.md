@@ -87,6 +87,8 @@ To use the `ClimaCell` custom component you must first obtain an <a href="https:
 
 The available Fields and suffixes can be found in the <a href="https://docs.climacell.co/reference/data-layers-overview" target="_blank">climacell dodumentation</a>. The old field names can still be used.
 
+For mapped values (e.g. weatherCode) the prefix "Raw" will disable mapping.
+
 ### Migration from V3 Version
 
 To make the integration API V4 compatible it has been largely restructured. We tried to make it backward compatible regarding configuration and sensor names but there might be some cornercases where the sensornames change when upgrading.
