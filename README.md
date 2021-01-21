@@ -47,163 +47,51 @@ To use the `ClimaCell` custom component you must first obtain an <a href="https:
   <dd><i>(string)(Optional)</i><br>Specify the unit system. Valid options are <code>us</code>, <code>si</code>.</dd>
   <dd><i>Default value:</i><br><code>si</code> or <code>us</code>, based on the temperature preference in Home Assistant</dd>   
   
-  <dt>monitored_conditions</dt>
-  <dd><i>(object list)(Required)</i><br>Conditions to display in the frontend.</dd>
+  <dt>timelines</dt>
+  <dd><i>(object list)(Required)</i><br>List of timeline specification. Each list item is an object with the following variables.</dd>
   <dd>
     <dl>
-        <dt>realtime</dt>
-        <dd>Access hyper-local ground-data based on a hybrid of traditional weather sources and our own sensing technology comprised of millions of cell towers and IoT sensors.</dd>
-        <dd>
-            <dl>
-                <dt>conditions</dt>
-                <dd><i>(string list)(Required)</i><br>Conditions to view. These depend on the type of service, see the table below for more details.</dd>
-                <dt>scan_interval</dt>
-                <dd><i>(time)(Optional)</i><br>Minimum time interval between updates.</dd>
-                <dd><i>Default value:</i><br>5 minutes</dd>
-                <dt>exclude_interval</dt>
-                <dd><i>(array of object)(Optional)</i><br>Intervals excluded from the update to use to reduce the number of the API calls. Each interval consists of a pair of values and indicates the start and end of the update exclusion. In particular you can specify from 1 to 20 different ranges.
-                    <dl>  
-                        <dt>Example</dt>
-                        <dd>exclude_interval:</dd> 
-                        <dd>&emsp;1:&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;# range</dd>
-                        <dd>&emsp;&emsp;- "23:30"&emsp;# start</dd>
-                        <dd>&emsp;&emsp;- "06:00"&emsp;# end</dd>
-                    </dl>  
-                </dd>  
-                <dd><i>Default value:</i><br>None</dd>
-            </dl>
-        </dd>
-        <dt>daily</dt>
-        <dd>The daily API call provides a global daily forecast with summaries up to 15 days out. Daily results are returned and calculated based on 6am to 6am UTC periods (meteorological timeframe).</dd>
-        <dd>
-            <dl>
-                <dt>forecast_observations</dt>
-                <dd><i>(integer)(Optional)</i><br>Number of days for which you would like to receive forecast. The valid values are numbers starting from 1 to 15. Any condition from <code>monitored_conditions</code> (forecast) will generate a sensor with entity_id <code>&lt;condition&gt;_&lt;day&gt;d</code>, where 'today' is <code>0d</code>.</dd>
-                <dd><i>Default value:</i><br>5</dd>
-                <dt>conditions</dt>
-                <dd><i>(string list)(Required)</i><br>Conditions to view. These depend on the type of service, see the table below for more details.</dd>
-                <dt>scan_interval</dt>
-                <dd><i>(time)(Optional)</i><br>Minimum time interval between updates.</dd>
-                <dd><i>Default value:</i><br>5 minutes</dd>
-                <dt>exclude_interval</dt>
-                <dd><i>(array of object)(Optional)</i><br>Intervals excluded from the update to use to reduce the number of the API calls. Each interval consists of a pair of values and indicates the start and end of the update exclusion. In particular you can specify from 1 to 20 different ranges.
-                    <dl>  
-                        <dt>Example</dt>
-                        <dd>exclude_interval:</dd> 
-                        <dd>&emsp;1:&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;# range</dd>
-                        <dd>&emsp;&emsp;- "23:30"&emsp;# start</dd>
-                        <dd>&emsp;&emsp;- "06:00"&emsp;# end</dd>
-                    </dl>  
-                </dd>  
-                <dd><i>Default value:</i><br>None</dd>
-            </dl>
-        </dd>        
-        <dt>hourly</dt>
-        <dd>The hourly call provides a global hourly forecast, up to 96 hours (4 days) out, for any location.</dd>
-        <dd>
-            <dl>
-                <dt>forecast_observations</dt>
-                <dd><i>(integer)(Optional)</i><br>Number of hours for which you would like to receive forecast. The valid values are numbers starting from 1 to 96. Any condition from <code>monitored_conditions</code> (forecast) will generate a sensor with entity_id <code>&lt;condition&gt;_&lt;hour&gt;h</code>, where <code>0h</code> if the first forecast hour.</dd>
-                <dd><i>Default value:</i><br>5</dd>
-                <dt>conditions</dt>
-                <dd><i>(string list)(Required)</i><br>Conditions to view. These depend on the type of service, see the table below for more details.</dd>
-                <dt>scan_interval</dt>
-                <dd><i>(time)(Optional)</i><br>Minimum time interval between updates.</dd>
-                <dd><i>Default value:</i><br>5 minutes</dd>
-                <dt>exclude_interval</dt>
-                <dd><i>(array of object)(Optional)</i><br>Intervals excluded from the update to use to reduce the number of the API calls. Each interval consists of a pair of values and indicates the start and end of the update exclusion. In particular you can specify from 1 to 20 different ranges.
-                    <dl>  
-                        <dt>Example</dt>
-                        <dd>exclude_interval:</dd> 
-                        <dd>&emsp;1:&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;# range</dd>
-                        <dd>&emsp;&emsp;- "23:30"&emsp;# start</dd>
-                        <dd>&emsp;&emsp;- "06:00"&emsp;# end</dd>
-                    </dl>  
-                </dd>  
-                <dd><i>Default value:</i><br>None</dd>
-             </dl>
-        </dd>
-        <dt>nowcast</dt>
-        <dd>“Nowcasting” is the art and science of making precision forecasts with very short lead-times, on the order of minutes to a few hours. In contrast with traditional forecasts, a nowcast provides near-term actionable information to consumers: when/where precipitation will start and end, when lightning or other hazards may impact an area, or similar. A typical nowcast has higher spatial resolution ( <2 km ) and time resolution ( <1 hour ).</dd>
-        <dd>
-            <dl>
-                <dt>timestep</dt>
-                <dd><i>(integer)(Optional)</i><br>Number of minutes from 5 to 60</dd>
-                <dd><i>Default value:</i><br>5</dd>
-                <dt>forecast_observations</dt>
-                <dd><i>(integer)(Optional)</i><br>Number of <code>timestep</code> for which you would like to receive forecast up to a maximum of 360 minute. Valid values respect the condition: <code>timestep * forecast_observations <= 360</code>. Any condition from <code>monitored_conditions</code> (forecast) will generate a sensor with entity_id <code>&lt;condition&gt;_&lt;minute&gt;m</code>.</dd>
-                <dd><i>Default value:</i><br>5</dd>
-                <dt>conditions</dt>
-                <dd><i>(string list)(Required)</i><br>Conditions to view. These depend on the type of service, see the table below for more details.</dd>
-                <dt>scan_interval</dt>
-                <dd><i>(time)(Optional)</i><br>Minimum time interval between updates.</dd>
-                <dd><i>Default value:</i><br>5 minutes</dd>
-                <dt>exclude_interval</dt>
-                <dd><i>(array of object)(Optional)</i><br>Intervals excluded from the update to use to reduce the number of the API calls. Each interval consists of a pair of values and indicates the start and end of the update exclusion. In particular you can specify from 1 to 20 different ranges.
-                    <dl>  
-                        <dt>Example</dt>
-                        <dd>exclude_interval:</dd> 
-                        <dd>&emsp;1:&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;# range</dd>
-                        <dd>&emsp;&emsp;- "23:30"&emsp;# start</dd>
-                        <dd>&emsp;&emsp;- "06:00"&emsp;# end</dd>
-                    </dl>  
-                </dd>  
-                <dd><i>Default value:</i><br>None</dd>
-            </dl>
-        </dd>
+      <dt>name</dt>
+      <dd><i>(string)(Optional)</i><br>Name of timeline used for naming the sensors.</dd>
+      <dd><i>Default value:</i><br>None</dd>
+      <dt>fields</dt>
+      <dd><i>(string list)(Required)</i><br>Conditions to view. These depend on the type of service, see the section below for more details.</dd>
+      <dt>timestep</dt>
+      <dd><i>(string)(Optional)</i><br>Step length for observations consisting of an integer value followed by 'm' for minute, 'h' for hour or 'd' for day.</dd>
+      <dd><i>Default value:</i><br>1d</dd>
+      <dt>forecast_observations</dt>
+      <dd><i>(integer)(Optional)</i><br>Number of timesteps for which you would like to receive forecast.</dd>
+      <dd><i>Default value:</i><br>5</dd>
+      <dt>scan_interval</dt>
+      <dd><i>(time)(Optional)</i><br>Minimum time interval between updates.</dd>
+      <dd><i>Default value:</i><br>5 minutes</dd>
+      <dt>exclude_interval</dt>
+      <dd><i>(array of object)(Optional)</i><br>Intervals excluded from the update to use to reduce the number of the API calls. Each interval consists of a pair of values and indicates the start and end of the update exclusion. In particular you can specify from 1 to 20 different ranges.
+          <dl>  
+            <dt>Example</dt>
+            <dd>exclude_interval:</dd> 
+            <dd>&emsp;1:&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;# range</dd>
+            <dd>&emsp;&emsp;- "23:30"&emsp;# start</dd>
+            <dd>&emsp;&emsp;- "06:00"&emsp;# end</dd>
+          </dl>  
+      </dd>  
+      <dd><i>Default value:</i><br>None</dd>
+      <dt>start_time</dt>
+      <dd><i>(integer)(Optional)</i><br>Number of minutes in future (+) or past (-) from the current time to start the timeline. The availability depends on timestep and requested fields.</dd>
+      <dd><i>Default value:</i><br>0</dd>
     </dl>
   </dd>   
 </dl>
 
 ### Condition information
 
-The table shows a summary of the services of the data provider. Detailed information can be found here: <a href="https://developer.climacell.co/v3/docs/why-climacell" target="_blank">https://developer.climacell.co/v3/docs/why-climacell</a>
+The available Fields and suffixes can be found in the <a href="https://docs.climacell.co/reference/data-layers-overview" target="_blank">climacell dodumentation</a>. The old field names can still be used.
 
-|        **Condition**        |           **Services**           |             **Description**         |
-|-----------------------------|----------------------------------|-------------------------------------|
-| temperature                 | realtime, nowcast, hourly, daily | Temperature             |
-| feels_like                  | realtime, nowcast, hourly, daily | Wind chill and heat window based on season             |
-| dewpoint                    | realtime, nowcast, hourly        | Temperature of the dew point             |
-| humidity                    | realtime, nowcast, hourly, daily | Percent relative humidity from 0 - 100%             |
-| wind_speed                  | realtime, nowcast, hourly, daily | Wind speed             |
-| wind_direction              | realtime, nowcast, hourly, daily | Wind direction in polar degrees 0-360 where 0 is North             |
-| wind_gust                   | realtime, nowcast, hourly        | Wind gust speed             |
-| pressure                    | realtime, nowcast, hourly, daily | Barometric pressure (at surface)             |
-| precipitation               | realtime, nowcast, hourly, daily | Precipitation intensity             |
-| precipitation_type          | realtime, nowcast, hourly        | The type of precipitation: none, rain, snow, ice pellets, and freezing rain             |
-| precipitation_probability   | hourly, daily                    | The chance that precipitation will occur at the forecast time within the hour or day             |
-| precipitation_accumulation  | hourly, daily                    | The accumulated amount of precipitation in the selected timestep             |
-| sunset                      | realtime, nowcast, hourly, daily | The times sunset based on location             |
-| sunrise                     | realtime, nowcast, hourly, daily | The times sunrise based on location             |
-| visibility                  | realtime, nowcast, hourly, daily | Visibility distance             |
-| cloud_cover                 | realtime, nowcast, hourly        | Fraction of the sky obscured by clouds             |
-| cloud_base                  | realtime, nowcast, hourly        | The lowest level at which the air contains a perceptible quantity of cloud particles: NULL (when there are no clouds)             |
-| cloud_ceiling               | realtime, nowcast, hourly        | The height of the lowest layer of clouds which covers more than half of the sky: NULL (when there are no clouds)             |
-| satellite_cloud             |                                  | Fraction of the sky obscured by clouds, as observed by satellites             |
-| surface_shortwave_radiation | realtime, nowcast, hourly        | Solar radiation reaching the surface             |
-| moon_phase                  | realtime, hourly                 | The shape of the directly sunlit portion of the Moon: new, waxing_crescent, first_quarter, waxing_gibbous, full, waning_gibbous, third_quarter, waning_crescent             |
-| weather_condition           | realtime, nowcast, hourly, daily | A textual field that conveys the weather conditions: freezing_rain_heavy, freezing_rain, freezing_rain_light, freezing_drizzle, ice_pellets_heavy, ice_pellets, ice_pellets_light, snow_heavy, snow, snow_light, flurries, tstorm, rain_heavy, rain, rain_light, drizzle, fog_light, fog, cloudy, mostly_cloudy, partly_cloudy, mostly_clear, clear            |
-| weather_groups              |                                  | All weather elements that convey the weather conditions             |
-| pm25                        | realtime, nowcast, hourly        | Particulate Matter < 2.5 μm             |
-| pm10                        | realtime, nowcast, hourly        | Particulate Matter < 10 μm             |
-| o3                          | realtime, nowcast, hourly        | Ozone             |
-| no2                         | realtime, nowcast, hourly        | Nitrogen Dioxide             |
-| co                          | realtime, nowcast, hourly        | Carbon Monoxide             |
-| so2                         | realtime, nowcast, hourly        | Sulfur Dioxide             |
-| epa_aqi                     | realtime, nowcast, hourly        | Air quality index per US EPA standard             |
-| epa_primary_pollutant       | realtime, nowcast, hourly        | Air quality index of primary pollutant per US EPA standard              |
-| epa_health_concern          | realtime, nowcast, hourly        | Health concern level based on EPA standard: Good, Moderate, Unhealthy for sensitive groups, Unhealthy, Very Unhealthy, Hazardous             |
-| china_aqi                   | realtime, nowcast, hourly        | Air quality index per China MEP standard             |
-| china_primary_pollutant     | realtime, nowcast, hourly        | Air quality index of primary pollutant per China MEP standard             |
-| china_health_concern        | realtime, nowcast, hourly        | Health concern level based on China MEP standard             |
-| pollen_tree                 | realtime, nowcast, hourly        | ClimaCell pollen index for trees             |
-| pollen_weed                 | realtime, nowcast, hourly        | ClimaCell pollen index for weeds             |
-| pollen_grass                | realtime, nowcast, hourly        | ClimaCell pollen index for grass             |
-| road_risk_score             | realtime, nowcast, hourly        | ClimaCell road risk (EU and US only): Low risk, Low-moderate risk, Moderate risk, High risk, Extreme risk             |
-| road_risk                   | realtime, nowcast, hourly        | The deprecated version of the above-mentioned: low_risk, moderate_risk, mod_hi_risk, high_risk, extreme_risk             |
-| road_risk_confidence        | realtime, nowcast, hourly        | An integer between 1 and 100 that is indicative of how confident we are in our road risk prediction (EU and US only)             |
-| road_risk_conditions        | realtime, nowcast, hourly        | Main weather conditions that are impacting the road risk score (EU and US only)             |
-| fire_index                  | realtime                         | ClimaCell fire hazard index             |
+For mapped values (e.g. weatherCode) the prefix "Raw" will disable mapping.
+
+### Migration from V3 Version
+
+To make the integration API V4 compatible it has been largely restructured. We tried to make it backward compatible regarding configuration and sensor names but there might be some cornercases where the sensornames change when upgrading.
 
 ## Integration Examples
 
@@ -215,228 +103,24 @@ sensor:
     name: example
     latitude: !secret gps_geo_home_lt
     longitude: !secret gps_geo_home_ln
-    monitored_conditions:
-      realtime:
-        conditions:
+    units: metric
+    timelines:
+      - name: "Daily"
+        fields:
           - temperature
-          - feels_like
-          - dewpoint
-          - humidity
-          - wind_speed
           - wind_direction
-          - wind_gust
-          - pressure
           - precipitation
           - precipitation_type
-#          - precipitation_probability
-#          - precipitation_accumulation
-          - sunset
-          - sunrise
-          - visibility
-          - cloud_cover
-          - cloud_base
-          - cloud_ceiling
-#          - satellite_cloud
-          - surface_shortwave_radiation
-          - moon_phase
+          - wind_speed
+          - wind_direction
           - weather_condition
-#          - weather_groups
-          - pm25
-          - pm10
-          - o3
-          - no2
-          - co
-          - so2
-          - epa_aqi
-          - epa_primary_pollutant
-          - epa_health_concern
-#          - china_aqi
-#          - china_primary_pollutant
-#          - china_health_concern
           - pollen_tree
           - pollen_weed
           - pollen_grass
-          - road_risk_score
-#          - road_risk
-          - road_risk_confidence
-          - road_risk_conditions
-          - fire_index
+        start_time: -5
+        forecast_observations: 3
+        timestep: "1d"
         update: auto
-        scan_interval:
-          # At least one of these must be specified:
-          days: 0
-          hours: 0
-          minutes: 30
-          seconds: 0
-          milliseconds: 0
-        exclude_interval:
-          1:
-            - "23:30"
-            - "06:00"
-      daily:
-        forecast_observations: 1
-        conditions:
-          - temperature
-          - feels_like
-#          - dewpoint
-          - humidity
-          - wind_speed
-          - wind_direction
-#          - wind_gust
-          - pressure
-          - precipitation
-#          - precipitation_type
-          - precipitation_probability
-          - precipitation_accumulation
-          - sunset
-          - sunrise
-          - visibility
-#          - cloud_cover
-#          - cloud_base
-#          - cloud_ceiling
-#          - satellite_cloud
-#          - surface_shortwave_radiation
-#          - moon_phase
-          - weather_condition
-#          - weather_groups
-#          - pm25
-#          - pm10
-#          - o3
-#          - no2
-#          - co
-#          - so2
-#          - epa_aqi
-#          - epa_primary_pollutant
-#          - epa_health_concern
-#          - china_aqi
-#          - china_primary_pollutant
-#          - china_health_concern
-#          - pollen_tree
-#          - pollen_weed
-#          - pollen_grass
-#          - road_risk_score
-#          - road_risk
-#          - road_risk_confidence
-#          - road_risk_conditions
-#          - fire_index
-        scan_interval:
-          # At least one of these must be specified:
-          days: 0
-          hours: 3
-          minutes: 0
-          seconds: 0
-          milliseconds: 0
-        exclude_interval:
-          1:
-            - "10:00"
-            - "12:00"
-          2:
-            - "00:00"
-            - "06:30"
-      hourly:
-        forecast_observations: 1
-        conditions:
-          - temperature
-          - feels_like
-          - dewpoint
-          - humidity
-          - wind_speed
-          - wind_direction
-          - wind_gust
-          - pressure
-          - precipitation
-          - precipitation_type
-          - precipitation_probability
-#          - precipitation_accumulation
-          - sunset
-          - sunrise
-          - visibility
-          - cloud_cover
-          - cloud_base
-          - cloud_ceiling
-#          - satellite_cloud
-          - surface_shortwave_radiation
-          - moon_phase
-          - weather_condition
-#          - weather_groups
-          - pm25
-          - pm10
-          - o3
-          - no2
-          - co
-          - so2
-          - epa_aqi
-          - epa_primary_pollutant
-          - epa_health_concern
-#          - china_aqi
-#          - china_primary_pollutant
-#          - china_health_concern
-          - pollen_tree
-          - pollen_weed
-          - pollen_grass
-          - road_risk_score
-#          - road_risk
-          - road_risk_confidence
-          - road_risk_conditions
-#          - fire_index
-        scan_interval:
-          # At least one of these must be specified:
-          days: 0
-          hours: 1
-          minutes: 0
-          seconds: 0
-          milliseconds: 0
-        exclude_interval:
-          1:
-            - "01:00"
-            - "05:00"
-      nowcast:
-        timestep: 5
-        forecast_observations: 1
-        conditions:
-          - temperature
-          - feels_like
-          - dewpoint
-          - humidity
-          - wind_speed
-          - wind_direction
-          - wind_gust
-          - pressure
-          - precipitation
-          - precipitation_type
-#          - precipitation_probability
-#          - precipitation_accumulation
-          - sunset
-          - sunrise
-          - visibility
-          - cloud_cover
-          - cloud_base
-          - cloud_ceiling
-#          - satellite_cloud
-          - surface_shortwave_radiation
-#          - moon_phase
-          - weather_condition
-#          - weather_groups
-          - pm25
-          - pm10
-          - o3
-          - no2
-          - co
-          - so2
-          - epa_aqi
-          - epa_primary_pollutant
-          - epa_health_concern
-#          - china_aqi
-#          - china_primary_pollutant
-#          - china_health_concern
-          - pollen_tree
-          - pollen_weed
-          - pollen_grass
-          - road_risk_score
-#          - road_risk
-          - road_risk_confidence
-          - road_risk_conditions
-#          - fire_index
         scan_interval:
           # At least one of these must be specified:
           days: 0
