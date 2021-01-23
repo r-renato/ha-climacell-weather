@@ -4,14 +4,18 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
 
-## [1.3.6] Unreleased
+## [2.0.2] Unreleased
 ### Fixed
 
 ### Added
 
 ### Changed
 
-## [1.3.5] Unreleased
+## [2.0.1] 2021-01-23
+### Changed
+Migration to API version 4
+
+## [1.3.5] 2020-07-19
 ### Fixed
 - Minor bug fix
 

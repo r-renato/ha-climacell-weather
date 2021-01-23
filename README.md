@@ -1,7 +1,7 @@
 # ClimaCell weather service provider integration
 ### ... is a custom component (sensor) for Home Assistant.<br>
 
-The `ClimaCell` platform uses the <a href="https://www.climacell.co/weather-api/docs/" target="_blank">ClimaCell API</a> as a source for meteorological data for your location.
+The `ClimaCell` platform uses the <a href="https://www.climacell.co/weather-api/docs/" target="_blank">ClimaCell API version 4</a> as a source for meteorological data for your location.
 
 [![hacs_badge](https://img.shields.io/badge/HACS-Default-orange.svg)](https://github.com/custom-components/hacs)
 
@@ -9,10 +9,19 @@ The `ClimaCell` platform uses the <a href="https://www.climacell.co/weather-api/
 
 [![BuyMeCoffee][buymecoffeebadge]][buymecoffee]
 
-_To use this component you must obtain an API key. Visit the <a href="https://www.climacell.co/weather-api" target="_blank">ClimaCell</a> site to learn how to obtain one._
+_To use this component you must obtain an API version 4 key. Visit the <a href="https://www.climacell.co/weather-api" target="_blank">ClimaCell</a> site to learn how to obtain one._
 
 ## **WARNING**
-`Realtime`, `nowcast`, `hourly` and `daily` are different services, so they consume one API call each.
+In December 2020, Climacell released released version 4 of ClimaCell API and announced that version 3 will be sunset on July 1, 2021. On this date, all requests made against v3 will fail. For more details read on <a href="https://docs.climacell.co/reference/migrating" target="_blank">ClimaCell</a>
+
+This new component version is based on Climacell API version 4 and is not backward compatible with the previous component (based on Climacell API version 3 ).
+The ClimaCell API version 3 are fundamentally different from API version 4, they contains two different set of sensors. Please check the differences before use: <a href="https://docs.climacell.co/reference/data-layers-overview" target="_blank">ClimaCell Layers Overview</a>
+
+### Migration from previous component version (based on API version 3)
+
+To make the integration API V4 compatible it has been largely restructured. We tried to make it backward compatible regarding configuration and sensor names but there might be some corner cases where the sensor names change when upgrading.
+
+The API version 3 authorization key don't work with the API version 4. If you use an API version 3 authorization key then you must retrieve a new authorization key, visit the <a href="https://www.climacell.co/weather-api" target="_blank">ClimaCell</a> site to learn how to obtain one.
 
 ## Manual installation
 
@@ -23,7 +32,7 @@ _To use this component you must obtain an API key. Visit the <a href="https://ww
 5. Place the content of the `custom_components/climacell/` directory (folder) in the new directory (folder) you created.
 
 ## Configuration
-To use the `ClimaCell` custom component you must first obtain an <a href="https://www.climacell.co/weather-api/pricing/">API key</a>. 
+To use the `ClimaCell` custom component you must first obtain an <a href="https://www.climacell.co/weather-api/pricing/" target="_blank">v4 API key</a>. 
 
 ### Sensor variables
 
@@ -44,16 +53,15 @@ To use the `ClimaCell` custom component you must first obtain an <a href="https:
   <dd><i>Default value:</i><br>Coordinates from the Home Assistant configuration</dd>
   
   <dt>units</dt>
-  <dd><i>(string)(Optional)</i><br>Specify the unit system. Valid options are <code>us</code>, <code>si</code>.</dd>
-  <dd><i>Default value:</i><br><code>si</code> or <code>us</code>, based on the temperature preference in Home Assistant</dd>   
+  <dd><i>(string)(Optional)</i><br>Specify the unit system. Valid options are <code>imperial</code>, <code>metric</code>.</dd>
+  <dd><i>Default value:</i><br><code>metric</code> or <code>us</code>, based on the temperature preference in Home Assistant</dd>   
   
   <dt>timelines</dt>
   <dd><i>(object list)(Required)</i><br>List of timeline specification. Each list item is an object with the following variables.</dd>
   <dd>
     <dl>
       <dt>name</dt>
-      <dd><i>(string)(Optional)</i><br>Name of timeline used for naming the sensors.</dd>
-      <dd><i>Default value:</i><br>None</dd>
+      <dd><i>(string)(Required)</i><br>Name of timeline used for naming the sensors.</dd>
       <dt>fields</dt>
       <dd><i>(string list)(Required)</i><br>Conditions to view. These depend on the type of service, see the section below for more details.</dd>
       <dt>timestep</dt>
@@ -88,10 +96,6 @@ To use the `ClimaCell` custom component you must first obtain an <a href="https:
 The available Fields and suffixes can be found in the <a href="https://docs.climacell.co/reference/data-layers-overview" target="_blank">climacell dodumentation</a>. The old field names can still be used.
 
 For mapped values (e.g. weatherCode) the prefix "Raw" will disable mapping.
-
-### Migration from V3 Version
-
-To make the integration API V4 compatible it has been largely restructured. We tried to make it backward compatible regarding configuration and sensor names but there might be some cornercases where the sensornames change when upgrading.
 
 ## Integration Examples
 
