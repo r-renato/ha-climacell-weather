@@ -53,8 +53,14 @@ class ClimacellTimelineDataProvider:
         self.__start_time = start_time
         self.__units = units
 
-        self.__timesteps_suffix = timesteps[-1]
-        self.__timesteps_int = int(timesteps[:-1])
+        if timesteps == 'current':
+            self.__timesteps_suffix = 'current'
+            self.__timesteps_int = ''
+            self.__observations = None
+        else:
+            self.__timesteps_suffix = timesteps[-1]
+            self.__timesteps_int = int(timesteps[:-1])
+
         self.__take_every = 1
 
         if self.__timesteps_suffix == "m":

@@ -188,12 +188,15 @@ def setup_platform(hass, config, add_entities, discovery_info=None):
         observations = (
             int(timeline_spec[CONF_FORECAST_OBSERVATIONS])
             if CONF_FORECAST_OBSERVATIONS in timeline_spec
-            else None
+            else 1
         )
         timestep = (
             timeline_spec[CONF_TIMESTEP] if CONF_TIMESTEP in timeline_spec else "1d"
         )
-        if not re.match('^[0-9]+[mhd]$',timestep) :
+
+        if timestep == 'current':
+            observations = 1
+        elif not re.match('^[0-9]+[mhd]$',timestep) :
             _LOGGER.error("Invalid timestep: %s", timestep)
             continue
 
@@ -318,7 +321,7 @@ class ClimacellTimelineSensor(Entity):
         self.__icon = icon
 
         self.__friendly_name = "cc " + sensor_friendly_name
-        if self._observation is None:
+        if timestep == 'current':
             self._observation = 0
         else:
             timestep_suffix = timestep[-1]
