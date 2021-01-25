@@ -57,6 +57,7 @@ class ClimacellTimelineDataProvider:
             self.__timesteps_suffix = 'current'
             self.__timesteps_int = ''
             self.__observations = None
+            self.__start_time = 0
         else:
             self.__timesteps_suffix = timesteps[-1]
             self.__timesteps_int = int(timesteps[:-1])
@@ -183,21 +184,23 @@ class ClimacellTimelineDataProvider:
             querystring = self._params
             querystring += "&fields=" + self.__fields
 
-            start_time_obj = datetime.now() + timedelta(minutes=self.__start_time)
-            start_time_obj = start_time_obj.replace(microsecond=0, tzinfo=None)
-            querystring += "&startTime=" + start_time_obj.isoformat() + "Z"
-            if self.__observations is not None:
-                time_delta = self.__timesteps_int * (
-                    self.__observations * self.__take_every
-                )
-                if self.__timesteps_suffix == "m":
-                    end_time = start_time_obj + timedelta(minutes=time_delta)
-                elif self.__timesteps_suffix == "h":
-                    end_time = start_time_obj + timedelta(hours=time_delta)
-                elif self.__timesteps_suffix == "d":
-                    end_time = start_time_obj + timedelta(days=time_delta)
+            if self.__start_time != 0:
+                start_time_obj = datetime.now() + timedelta(minutes=self.__start_time)
+                start_time_obj = start_time_obj.replace(microsecond=0, tzinfo=None)
+                querystring += "&startTime=" + start_time_obj.isoformat() + "Z"
 
-                querystring += "&endTime=" + end_time.isoformat() + "Z"
+                if self.__observations is not None:
+                    time_delta = self.__timesteps_int * (
+                        self.__observations * self.__take_every
+                    )
+                    if self.__timesteps_suffix == "m":
+                        end_time = start_time_obj + timedelta(minutes=time_delta)
+                    elif self.__timesteps_suffix == "h":
+                        end_time = start_time_obj + timedelta(hours=time_delta)
+                    elif self.__timesteps_suffix == "d":
+                        end_time = start_time_obj + timedelta(days=time_delta)
+
+                    querystring += "&endTime=" + end_time.isoformat() + "Z"
 
             url = _ENDPOINT + "/timelines"
             self.data = self.__retrieve_data(url, self.__headers, querystring)
