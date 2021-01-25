@@ -101,7 +101,7 @@ For mapped values (e.g. weatherCode) the prefix "Raw" will disable mapping.
 
 ```yaml
 sensor:
-## Weather climatecell.co
+  # Weather climatecell.co
   - platform: climacell
     api_key: !secret climacell_api_key
     name: example
@@ -109,39 +109,68 @@ sensor:
     longitude: !secret gps_geo_home_ln
     units: metric
     timelines:
-      - name: "Daily"
+      - name: "" #Realtime
+        timestep: "1m"
+        forecast_observations: 1
         fields:
           - temperature
-          - wind_direction
-          - precipitation
-          - precipitation_type
+          - feels_like
+          - humidity
           - wind_speed
           - wind_direction
+          - wind_gust
+          - pressure
+          - precipitationIntensity
+          - precipitation_type
+          - visibility
+          - cloud_cover
           - weather_condition
+          - pm25
+          - pm10
+          - o3
+          - no2
+          - co
+          - so2
+          - epa_aqi
+          - epa_health_concern
           - pollen_tree
           - pollen_weed
           - pollen_grass
-        start_time: -5
-        forecast_observations: 3
-        timestep: "1d"
+          - fire_index
         update: auto
         scan_interval:
           # At least one of these must be specified:
           days: 0
-          hours: 0
-          minutes: 5
+          hours: 1
+          minutes: 0
           seconds: 0
           milliseconds: 0
         exclude_interval:
           1:
-            - "09:00"
-            - "10:00"
-          2:
-            - "13:00"
-            - "14:00"
-          3:
-            - "18:00"
+            - "00:00"
             - "07:00"
+      - name: "" #Daily
+        timestep: "1d"
+        forecast_observations: 5
+        fields:
+          - temperature
+          - temperatureMin
+          - temperatureMax
+          - precipitationIntensityMin
+          - precipitationIntensityMax
+          - precipitation_probability
+          - weather_condition
+        scan_interval:
+          # At least one of these must be specified:
+          days: 0
+          hours: 4
+          minutes: 0
+          seconds: 0
+          milliseconds: 0
+        exclude_interval:
+          1:
+            - "23:00"
+            - "06:30"
 ```
 
 The `climacell` custom component exposes a sensor for each monitored condition.
