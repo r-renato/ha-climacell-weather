@@ -4,12 +4,16 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
 
-## [2.0.3] Unreleased
+## [2.0.4] Unreleased
 ### Fixed
 
 ### Added
 
 ### Changed
+
+## [2.0.3] 2021-01-26
+### Fixed
+- forecast_observations bug fix
 
 ## [2.0.2] 2021-01-25
 ### Changed

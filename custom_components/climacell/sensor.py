@@ -321,6 +321,7 @@ class ClimacellTimelineSensor(Entity):
         self.__icon = icon
 
         self.__friendly_name = "cc " + sensor_friendly_name
+
         if timestep == 'current':
             self._observation = 0
         else:
@@ -329,10 +330,15 @@ class ClimacellTimelineSensor(Entity):
             timestep_length = 1
             if timestep_suffix == "m":
                 timestep_length = 2
-            timestep_formatted = (
-                str(timestep_int * self._observation).zfill(timestep_length)
-                + timestep_suffix
-            )
+
+            if self._observation is None:
+                timestep_formatted = ""
+            else:
+                timestep_formatted = (
+                    str(timestep_int * (self._observation)).zfill(timestep_length)
+                    + timestep_suffix
+                )
+
             self.__friendly_name += " " + timestep_formatted
 
         if isinstance(unit, dict):
@@ -391,7 +397,7 @@ class ClimacellTimelineSensor(Entity):
             self.__data_provider.retrieve_update()
 
         if self.__data_provider.data is not None:
-            if self._observation >= len(self.__data_provider.data["intervals"]):
+            if (0 if self._observation is None else self._observation) >= len(self.__data_provider.data["intervals"]):
                 _LOGGER.error(
                     "observation %s missing: %s",
                     self._observation,
@@ -399,7 +405,7 @@ class ClimacellTimelineSensor(Entity):
                 )
                 return
 
-            sensor_data = self.__data_provider.data["intervals"][self._observation]
+            sensor_data = self.__data_provider.data["intervals"][(0 if self._observation is None else self._observation)]
             self._state = sensor_data["values"][self.__field]
             if self.__valuemap is not None:
                 self._state = self.__valuemap[str(self._state)]
