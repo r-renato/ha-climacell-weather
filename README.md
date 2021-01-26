@@ -95,6 +95,8 @@ To use the `ClimaCell` custom component you must first obtain an <a href="https:
 
 The available Fields and suffixes can be found in the <a href="https://docs.climacell.co/reference/data-layers-overview" target="_blank">climacell dodumentation</a>. The old field names can still be used.
 
+You can put the suffixes "Max", "Min", "Avg", "MaxTime" or "MinTime" at the end of the field name to get the maximum, minimum, average, time of maximum and time of minimum in the selected timestep respectively. So to get the maximum temperature you would use the field temperatureMax.
+
 For mapped values (e.g. weatherCode) the prefix "Raw" will disable mapping.
 
 ## Integration Examples
@@ -113,7 +115,7 @@ sensor:
         timestep: "1m"
         forecast_observations: 1
         fields:
-          - temperature
+          - temperatureMax
           - feels_like
           - humidity
           - wind_speed
