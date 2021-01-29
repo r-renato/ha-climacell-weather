@@ -231,13 +231,13 @@ class ClimacellTimelineDataProvider:
                 result = json.loads(response.text)
                 result = result["data"]["timelines"][0]
                 result["intervals"] = result["intervals"][:: self.__take_every]
+                _LOGGER.debug("_retrieve_data response.text: %s", response.text)
             else:
                 _LOGGER.error(
-                    "ClimacellTimelineDataProvider._retrieve_data error status_code %s",
+                    "ClimacellTimelineDataProvider._retrieve_data error status_code %s. Response text: %s",
                     response.status_code,
+                    response.text
                 )
-
-            _LOGGER.debug("_retrieve_data response.text: %s", response.text)
 
         except socket.error as err:
             _LOGGER.error(
