@@ -291,25 +291,6 @@ CLIMACELL_FIELDS = {
         ATTR_CONDITION: ATTR_POLLEN_GRASS,
     },
     #
-    # Road Risk
-    #
-    "roadRiskScore": {
-        ATTR_NAME: "Road Risk Score",
-        ATTR_ICON: "",
-        ATTR_CONDITION: ATTR_ROAD_RISK_SCORE,
-    },
-    "roadRisk": {ATTR_NAME: "Road Risk", ATTR_ICON: "", ATTR_CONDITION: ATTR_ROAD_RISK},
-    "roadRiskConfidence": {
-        ATTR_NAME: "Road Risk Confidence",
-        ATTR_ICON: "",
-        ATTR_CONDITION: ATTR_ROAD_RISK_CONFIDENCE,
-    },
-    "roadRiskConditions": {
-        ATTR_NAME: "Road Risk Conditions",
-        ATTR_ICON: "",
-        ATTR_CONDITION: ATTR_ROAD_RISK_CONDITIONS,
-    },
-    #
     # Fire Index
     #
     "fireIndex": {
