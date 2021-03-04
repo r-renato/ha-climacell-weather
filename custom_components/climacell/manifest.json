@@ -4,5 +4,6 @@
   "documentation": "https://gitlab.com/rrenato/ha-climacell-weather",
   "dependencies": [],
   "codeowners": ["@r-renato"],
-  "requirements": []
+  "requirements": [],
+  "version": "2.0.3"
 }
