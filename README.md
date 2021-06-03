@@ -1,6 +1,6 @@
 # ClimaCell weather service provider integration
 ### ... is a custom component (sensor) for Home Assistant.<br>
-## Made By: r-renato
+## Made By: @r-renato
 
 ## <a href= "https://github.com/r-renato/ha-climacell-weather" target="_blank"> Original Repo</a>
 
