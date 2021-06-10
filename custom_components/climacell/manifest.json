@@ -1,9 +1,9 @@
 {
-  "domain": "climacell",
+  "domain": "climacell_custom",
   "name": "Climacell weather",
   "documentation": "https://gitlab.com/rrenato/ha-climacell-weather",
   "dependencies": [],
   "codeowners": ["@r-renato"],
   "requirements": [],
-  "version": "2.0.3"
+  "version": "2.0.5"
 }

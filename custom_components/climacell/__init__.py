@@ -6,9 +6,9 @@ import logging
 
 from homeassistant.core import callback
 
-from custom_components.climacell.data_provider import ClimacellTimelineDataProvider
+from custom_components.climacell_custom.data_provider import ClimacellTimelineDataProvider
 
-DOMAIN = "climacell"
+DOMAIN = "climacell_custom"
 
 _LOGGER = logging.getLogger(__name__)
 

@@ -12,7 +12,7 @@ from homeassistant.components.weather import (
 
 from homeassistant.const import CONF_SCAN_INTERVAL, SUN_EVENT_SUNSET, SUN_EVENT_SUNRISE
 
-from custom_components.climacell.global_const import (
+from custom_components.climacell_custom.global_const import (
     ATTR_WEATHER_FEELS_LIKE,
     ATTR_WEATHER_DEWPOINT,
     ATTR_WEATHER_WIND_GUST,
