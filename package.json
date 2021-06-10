@@ -1,6 +1,6 @@
 {
   "name": "ha-climacell-weather",
-  "version": "1.0.1",
+  "version": "2.0.5b1",
   "description": "The Home Assistant custom component retrieve weather information using the climacell API. (https://www.climacell.co).",
   "keywords": [
     "home-assistant",
@@ -11,7 +11,7 @@
     "climacell"
   ],
   "homepage": "https://gitlab.com/rrenato/ha-climacell-weather#readme",
-  "module": "climacell",
+  "module": "climacell_custom",
   "repository": {
     "type": "git",
     "url": "git+ssh://git@github.com/r-renato/ha-climacell-weather.git"

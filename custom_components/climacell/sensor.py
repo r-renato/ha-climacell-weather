@@ -24,20 +24,20 @@ from homeassistant.helpers import config_validation as cv
 from homeassistant.components.sensor import PLATFORM_SCHEMA
 from homeassistant.helpers.entity import Entity
 
-from custom_components.climacell.daily_api_const import (
+from custom_components.climacell_custom.daily_api_const import (
     CONF_DAILY,
     SCHEMA_DAILY_CONDITIONS,
 )
-from custom_components.climacell.global_const import *
-from custom_components.climacell.hourly_api_const import (
+from custom_components.climacell_custom.global_const import *
+from custom_components.climacell_custom.hourly_api_const import (
     CONF_HOURLY,
     SCHEMA_HOURLY_CONDITIONS,
 )
-from custom_components.climacell.nowcast_api_const import (
+from custom_components.climacell_custom.nowcast_api_const import (
     SCHEMA_NOWCAST_CONDITIONS,
     CONF_NOWCAST,
 )
-from custom_components.climacell.realtime_api_const import (
+from custom_components.climacell_custom.realtime_api_const import (
     CONF_REALTIME,
     SCHEMA_REALTIME_CONDITIONS,
 )
