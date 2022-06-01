@@ -6,7 +6,7 @@
 
 The `ClimaCell` platform uses the <a href="https://www.climacell.co/weather-api/docs/" target="_blank">ClimaCell API version 4</a> as a source for meteorological data for your location.
 
-[![hacs_badge](https://img.shields.io/badge/HACS-Default-orange.svg)](https://github.com/custom-components/hacs)
+[![hacs_badge](https://img.shields.io/badge/HACS-Default-orange.svg)](https://github.com/hacs/integration)
 
 [![License][license-shield]](LICENSE)
 
