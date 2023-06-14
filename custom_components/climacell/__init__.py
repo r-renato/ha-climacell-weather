@@ -13,8 +13,7 @@ DOMAIN = "climacell_custom"
 _LOGGER = logging.getLogger(__name__)
 
 
-@asyncio.coroutine
-def async_setup(hass, config):
+async def async_setup(hass, config):
     _LOGGER.info("__init__ async_setup start for domain %s.", DOMAIN)
 
     @callback
